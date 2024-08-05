@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'landingapp',
+    'django_apscheduler',
     'formsapp'
 ]
 
@@ -131,3 +132,6 @@ STATICFILES_DIRS = [
 ]
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'templates')
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
