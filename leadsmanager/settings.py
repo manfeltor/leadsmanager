@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'landingapp',
     'django_apscheduler',
-    'formsapp'
+    'formsapp',
+    # 'usersapp'
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,5 @@ STATICFILES_DIRS = [
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+# AUTH_USER_MODEL = 'usersapp.CustomUser'
