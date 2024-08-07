@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+.login-btn {
+    cursor: pointer;
+}
 </style>
 </head>
 <body class="w3-light-grey">
@@ -16,8 +19,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 <!-- Top container -->
 {% block Top_container %}
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-  <span class="w3-bar-item w3-right" onclick="document.getElementById('loginModal').style.display='block'">Login</span>
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i> Menu</button>
+  <button class="w3-bar-item w3-button w3-right login-btn" onclick="document.getElementById('loginModal').style.display='block'">Login</button>
 </div>
 {% endblock %}
 
@@ -64,18 +67,26 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       <span onclick="document.getElementById('loginModal').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
       <img src="/w3images/avatar2.png" alt="Avatar" style="width:30%" class="w3-circle w3-margin-top">
     </div>
-
-    <form class="w3-container" action="{% url 'login' %}" method="post">
-      {% csrf_token %}
-      <div class="w3-section">
-        <label><b>Username</b></label>
-        <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Username" name="username" required>
-        <label><b>Password</b></label>
-        <input class="w3-input w3-border" type="password" placeholder="Enter Password" name="password" required>
-        <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Login</button>
-      </div>
-    </form>
-
+    {% if request.user.is_authenticated %}
+      <form class="w3-container" action="#" method="post">
+        {% csrf_token %}
+        <div class="w3-section">
+          <p>Welcome, {{ request.user.username }}</p>
+          <button class="w3-button w3-block w3-green w3-section w3-padding" onclick="confirmLogout()" type="submit">Logout</button>
+        </div>
+      </form>
+    {% else %}
+      <form class="w3-container" action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="w3-section">
+          <label><b>Username</b></label>
+          <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Username" name="username" required>
+          <label><b>Password</b></label>
+          <input class="w3-input w3-border" type="password" placeholder="Enter Password" name="password" required>
+          <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Login</button>
+        </div>
+      </form>
+    {% endif %}
     <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
       <button onclick="document.getElementById('loginModal').style.display='none'" type="button" class="w3-button w3-red">Cancel</button>
     </div>
@@ -336,3 +347,16 @@ function w3_close() {
 
 </body>
 </html>
+
+<script>
+  function confirmLogout() {
+      var confirmation = confirm("Estas seguro que quieres desloguearte?");
+      if (confirmation) {
+          // If user confirms, redirect to the logout URL
+          window.location.href = "{% url 'logout' %}";
+      } else {
+          // If user cancels, do nothing
+          // You can add additional actions here if needed
+      }
+  }
+</script>
