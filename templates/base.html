@@ -20,7 +20,11 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 {% block Top_container %}
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i> Menu</button>
+  {% if request.user.is_authenticated %}
+  <button class="w3-bar-item w3-button w3-right login-btn" onclick="showLogoutModal()">Logout</button>
+  {% else %}
   <button class="w3-bar-item w3-button w3-right login-btn" onclick="document.getElementById('loginModal').style.display='block'">Login</button>
+  {% endif %}
 </div>
 {% endblock %}
 
@@ -46,7 +50,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i> Close Menu</a>
     <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i> gral</a>
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i> campo1</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> campo2</a>
+    <a href="{% url 'list_users' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> Usuarios</a>
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i> campo3</a>
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i> campo4</a>
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i> campo5</a>
@@ -68,14 +72,19 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       <img src="/w3images/avatar2.png" alt="Avatar" style="width:30%" class="w3-circle w3-margin-top">
     </div>
     {% if request.user.is_authenticated %}
-      <form class="w3-container" action="#" method="post">
-        {% csrf_token %}
-        <div class="w3-section">
-          <p>Welcome, {{ request.user.username }}</p>
-          <button class="w3-button w3-block w3-green w3-section w3-padding" onclick="confirmLogout()" type="submit">Logout</button>
-        </div>
-      </form>
+      <!-- Logout Section -->
+      <div class="w3-container" id="logoutSection">
+        <form action="{% url 'logout' %}" method="post" id="logoutForm">
+          {% csrf_token %}
+          <div class="w3-section">
+            <p>Are you sure you want to logout, {{ request.user.username }}?</p>
+            <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Yes, Logout</button>
+            <button class="w3-button w3-block w3-red w3-section w3-padding" type="button" onclick="cancelLogout()">Cancel</button>
+          </div>
+        </form>
+      </div>
     {% else %}
+      <!-- Login Form Section -->
       <form class="w3-container" action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <div class="w3-section">
@@ -310,13 +319,13 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4>FOOTER</h4>
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  </footer>
+ <!-- Footer -->
+ <footer class="w3-container w3-padding-16 w3-light-grey">
+  <h4>FOOTER</h4>
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
 
-  <!-- End page content -->
+<!-- End page content -->
 </div>
 {% endblock %}
 
@@ -329,34 +338,35 @@ var overlayBg = document.getElementById("myOverlay");
 
 // Toggle between showing and hiding the sidebar, and add overlay effect
 function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
+if (mySidebar.style.display === 'block') {
+  mySidebar.style.display = 'none';
+  overlayBg.style.display = "none";
+} else {
+  mySidebar.style.display = 'block';
+  overlayBg.style.display = "block";
+}
 }
 
 // Close the sidebar with the close button
 function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
+mySidebar.style.display = "none";
+overlayBg.style.display = "none";
+}
+
+// Show the logout confirmation section
+function showLogoutModal() {
+var logoutSection = document.getElementById('logoutSection');
+logoutSection.style.display = 'block';
+document.getElementById('loginModal').style.display = 'block';
+}
+
+// Hide the logout confirmation section
+function cancelLogout() {
+var logoutSection = document.getElementById('logoutSection');
+logoutSection.style.display = 'none';
+document.getElementById('loginModal').style.display = 'none';
 }
 </script>
 
 </body>
 </html>
-
-<script>
-  function confirmLogout() {
-      var confirmation = confirm("Estas seguro que quieres desloguearte?");
-      if (confirmation) {
-          // If user confirms, redirect to the logout URL
-          window.location.href = "{% url 'logout' %}";
-      } else {
-          // If user cancels, do nothing
-          // You can add additional actions here if needed
-      }
-  }
-</script>

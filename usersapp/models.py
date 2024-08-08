@@ -24,8 +24,8 @@ class CustomUser(AbstractUser):
 
 class UserAttribute(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='attributes')
-    key = models.CharField(max_length=50)
-    value = models.CharField(max_length=255)
+    value1 = models.CharField(max_length=50, blank=True, null=True)
+    value2 = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.user.username} - {self.key}: {self.value}'
+        return f'{self.user.username}'
