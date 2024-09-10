@@ -164,7 +164,7 @@ def category_breakdown_view(request):
 
         if not trend_df.empty:
             # interactive_line_plot now returns two values, the graph and regression info
-            graph_json, regression_info = interactive_line_plot(trend_df, 'date', 'daily_count', f'Trend for {group1}', add_regression=True)
+            graph_json, regression_info = interactive_line_plot(trend_df, 'date', 'daily_count', f'Trend for {group1}', xaxis_title="Fecha", yaxis_title="Cantidad de leads", add_regression=True)
             trend_data[group1] = {
                 'data': json.loads(graph_json),  # Convert JSON string to Python object
                 'regression_info': regression_info  # Pass regression info to the context
