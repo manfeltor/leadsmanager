@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block Sidebar_menu %}
+<style>
+.w3-sidebar {
+    padding-top: 60px; /* Adjust this value to avoid overlap with the top bar */
+}
+</style>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar">
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Bienvenido <strong>{{ request.user.username }}</strong></span><br>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+      <a href="{% url 'profile' %}" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Dashboard</h5>
+  </div>
+  <div class="w3-bar-block">
+    <form method="GET" action="{% url 'forms_list' %}">
+      <div class="w3-container">
+        <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding w3-red"><i class="fa fa-bank fa-fw"></i>Home</a>
+
+        <h5>Filtrar Leads</h5>
+
+        <label for="assigned_user">Asignado a:</label>
+        <select name="assigned_user" class="w3-select" id="assigned_user">
+          <option value="">-- Seleccionar Usuario --</option>
+          {% for user in users %}
+          <option value="{{ user.id }}" {% if request.GET.assigned_user == user.id|stringformat:"s" %}selected{% endif %}>{{ user.username }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="estado">Estado:</label>
+        <select name="estado" class="w3-select" id="estado">
+          <option value="">-- Seleccionar Estado --</option>
+          {% for value, label in estados %}
+          <option value="{{ value }}" {% if request.GET.estado == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="start_date">Desde:</label>
+        <input type="date" name="start_date" class="w3-input" value="{{ request.GET.start_date }}">
+
+        <label for="end_date">Hasta:</label>
+        <input type="date" name="end_date" class="w3-input" value="{{ request.GET.end_date }}">
+
+        <button type="submit" class="w3-button w3-block w3-green w3-margin-top">Filtrar</button>
+      </div>
+    </form>
+  </div>
+</nav>
+
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+{% endblock %}
+
+{% block main_page %}
+<body class="w3-light-grey">
+    <div class="w3-main">
+        <h2>Formularios Completados</h2>
+        <div class="table-container">
+            <table class="w3-table w3-bordered w3-striped w3-hoverable">
+                <thead>
+                    <tr class="w3-light-grey">
+                        <th>Submission ID</th>
+                        <th>Razón Social</th>
+                        <th>Nombre y Apellido</th>
+                        <th>Servicio</th>
+                        <th>Usuario asignado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in forms %}
+                    <tr data-href="{% url 'form_detail' form.submission_id %}" style="cursor:pointer;">
+                        <td>{{ form.submission_id }}</td>
+                        <td>{{ form.razon_social }}</td>
+                        <td>{{ form.nombre_y_apellido }}</td>
+                        <td>{{ form.servicio }}</td>
+                        <td>{{ form.servicio }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle the row click
+        document.addEventListener("DOMContentLoaded", function() {
+            var rows = document.querySelectorAll("tr[data-href]");
+            rows.forEach(function(row) {
+                row.addEventListener("click", function() {
+                    window.location.href = this.dataset.href;
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}

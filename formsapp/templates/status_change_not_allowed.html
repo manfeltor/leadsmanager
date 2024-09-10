@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Change Not Allowed</title>
+</head>
+<body>
+    <h1>Status Change Not Allowed</h1>
+    <p>You do not have permission to change the status of this lead to a previous state. Please contact your manager for assistance.</p>
+    <a href="{% url 'home' %}">Go Back to Home</a>
+</body>
+
+{% endblock %}

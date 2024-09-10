@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block main_page %}
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+    <div class="w3-container w3-card-4 w3-white w3-margin">
+        <h2>Acceso no autorizado</h2>
+        <p>Usted no posee permisos para acceder a esta pagina.</p>
+        <p>Si considera que esto es un error, por favor contacte con el administrador de la pagina.</p>
+        <a href="{% url 'home' %}" class="w3-button w3-blue">Retornar a HOME</a>
+    </div>
+</div>
+{% endblock %}

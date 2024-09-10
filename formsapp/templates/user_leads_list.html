@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block Sidebar_menu %}
+<style>
+.w3-sidebar {
+    padding-top: 60px; /* Adjust this value to avoid overlap with the top bar */
+}
+</style>
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar">
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Bienvenido <strong>{{ request.user.username }}</strong></span><br>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+      <a href="{% url 'profile' %}" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Filtrar Leads</h5>
+    <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding w3-red"><i class="fa fa-bank fa-fw"></i>Home</a>
+    <form method="GET" action="{% url 'user_leads' %}">
+      <label for="status">Estado:</label>
+      <select name="status" id="status" class="w3-select w3-border">
+        <option value="">Todos</option>
+        {% for status, display_name in estado_choices %}
+        <option value="{{ status }}" {% if status == status_filter %}selected{% endif %}>{{ display_name }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="date_from">Desde:</label>
+      <input type="date" name="date_from" id="date_from" class="w3-input w3-border" value="{{ date_from }}">
+
+      <label for="date_to">Hasta:</label>
+      <input type="date" name="date_to" id="date_to" class="w3-input w3-border" value="{{ date_to }}">
+
+      <button type="submit" class="w3-button w3-green w3-margin-top">Filtrar</button>
+    </form>
+  </div>
+  <hr>
+  <!-- <div class="w3-bar-block">
+    <a href="{% url 'user_leads' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>Mis leads</a>
+  </div> -->
+</nav>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+{% endblock %}
+{% block main_page %}
+
+<style>
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    .login-btn {
+        cursor: pointer;
+    }
+
+    /* Ensure main content is pushed to the right of the sidebar */
+    .w3-main {
+        margin-left: 300px; /* Adjusted to account for sidebar width */
+        height: calc(100vh - 43px); /* Full height minus the height of the top bar */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Adjust the sidebar for smaller screens */
+    @media screen and (max-width: 600px) {
+        .w3-sidebar {
+            width: 100%; /* Full width on small screens */
+            display: block;
+        }
+        .w3-main {
+            margin-left: 0; /* No margin on small screens */
+        }
+        .w3-top {
+            position: relative;
+        }
+    }
+
+    .table-container {
+        overflow-y: auto; /* Enable vertical scrolling */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        flex-grow: 1; /* Ensure the table container takes up available space */
+    }
+
+    .table-container table {
+        width: max-content; /* Ensure the table takes the width of its content */
+        min-width: 100%; /* Ensure the table stretches to at least the container's width */
+        display: inline-block; /* Keep the table inline for scrolling */
+    }
+</style>
+
+<body class="w3-light-grey">
+    <div class="w3-main">
+        <h2>Mis leads</h2>
+        <div class="table-container">
+            <table class="w3-table w3-bordered w3-striped w3-hoverable">
+                <thead>
+                    <tr class="w3-light-grey">
+                        <th>Submission ID</th>
+                        <th>Razon Social</th>
+                        <th>Nombre y Apellido</th>
+                        <th>Servicio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in user_leads %}
+                    <tr data-href="{% url 'user_form_detail' lead.submission_id %}" style="cursor:pointer;">
+                        <td>{{ lead.submission_id }}</td>
+                        <td>{{ lead.razon_social }}</td>
+                        <td>{{ lead.nombre_y_apellido }}</td>
+                        <td>{{ lead.servicio }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle the row click
+        document.addEventListener("DOMContentLoaded", function() {
+            var rows = document.querySelectorAll("tr[data-href]");
+            rows.forEach(function(row) {
+                row.addEventListener("click", function() {
+                    window.location.href = this.dataset.href;
+                });
+            });
+        });
+    </script>
+</body>
+{% endblock %}

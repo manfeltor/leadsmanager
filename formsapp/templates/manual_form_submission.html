@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block main_page %}
+<div class="w3-main" style="margin-top:50px;">
+  <div class="w3-container w3-card-4 w3-white w3-margin" >
+    <h2>Manual Form Submission</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

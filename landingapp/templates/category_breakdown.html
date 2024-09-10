@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block main_page %}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<body class="w3-light-grey">
+
+    <form method="GET" action="{% url 'category_breakdown' %}" style="margin-left:300px;margin-top:43px;">
+        <label for="days_period">Seleccione el rango de días a analizar (60 por default):</label>
+        <select name="days_period" id="days_period" class="w3-select w3-border">
+            <option value="7" {% if days_period == 7 %}selected{% endif %}>Últimos 7 días</option>
+            <option value="30" {% if days_period == 30 %}selected{% endif %}>Últimos 30 días</option>
+            <option value="60" {% if days_period == 60 %}selected{% endif %}>Últimos 60 días</option>
+            <option value="90" {% if days_period == 90 %}selected{% endif %}>Últimos 90 días</option>
+            <option value="180" {% if days_period == 180 %}selected{% endif %}>Últimos 180 días</option>
+        </select>
+        <button type="submit" class="w3-button w3-green">Actualizar</button>
+    </form>
+
+    <div class="w3-main" style="margin-left:300px;margin-top:43px;">
+        <h2>Desglose de categorías - últimos {{ days_period }} días</h2>
+    
+        {% for group1, plot_json in plot_data.items %}
+        <div class="w3-margin-top">
+            <h3>{{ group1 }}</h3>
+            <h3>Leads totales: {{ total_leads_in_group|get_item:group1 }}</h3>
+            <!-- <h3>{{ group1.totalLeadsCount }}</h3> -->
+            {% if total_leads_in_group|get_item:group1 > 0 %}
+            <div id="{{ group1 }}Chart"></div>
+            <button onclick="showDetails('{{ group1 }}')" class="w3-button w3-dark-grey">Más detalles</button>
+            {% else %}
+            <div id="{{ group1 }}Chart"></div>
+            <button class="w3-button w3-dark-grey">Sin data</button>
+            {% endif %}
+        </div>
+    
+        <script>
+            // Render the bar plot for each category
+            var plotData = {{ plot_json|safe }};
+            Plotly.newPlot('{{ group1 }}Chart', plotData.data, plotData.layout);
+        </script>
+        {% endfor %}
+    </div>
+    
+    <!-- Modal for Detailed Breakdown -->
+    <div id="statsModal" class="w3-modal">
+        <div class="w3-modal-content w3-card-4" style="max-width:800px;">
+            <header class="w3-container w3-lime">
+                <span onclick="document.getElementById('statsModal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                <h2 id="categoryName">Descomposición detallada</h2>
+            </header>
+            <div class="w3-container">
+                <h3>Leads totales: <span id="totalLeadsCount"></span></h3>
+                <h3>Tendencia en el rango</h3>
+                <div id="trendChart"></div>
+
+                <!-- Add placeholders for regression info -->
+                <h3 id="regressionInfo">Información de la regresión</h3>
+                <p>Regresión: <span id="regressionEquation"></span></p>
+                <p>R²: <span id="regressionR2"></span></p>
+                <p>Promedio: <span id="regressionAverage"></span></p>
+                <p>Moda: <span id="regressionMode"></span></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const trendData = JSON.parse('{{ trend_data_json|escapejs }}');
+        var totalLeadsData = {{ total_leads_in_group_json|safe }};
+        
+        function showDetails(category) {
+            if (!trendData[category]) {
+                console.error("Trend data for category not found:", category);
+                return;
+            }
+    
+            // Show the trend chart
+            var selectedTrendData = trendData[category].data;
+            Plotly.newPlot('trendChart', selectedTrendData.data, selectedTrendData.layout);
+    
+            // Display total leads count
+            document.getElementById('totalLeadsCount').innerText = totalLeadsData[category];
+    
+            // Display regression info (if available)
+            if (trendData[category].regression_info) {
+                var regInfo = trendData[category].regression_info;
+                document.getElementById('regressionEquation').innerText = regInfo.equation;
+                document.getElementById('regressionR2').innerText = regInfo.r_squared;
+                document.getElementById('regressionAverage').innerText = regInfo.average;
+                document.getElementById('regressionMode').innerText = regInfo.mode;
+            }
+    
+            // Show the modal
+            document.getElementById('statsModal').style.display = 'block';
+        }
+    </script>
+
+{% endblock %}

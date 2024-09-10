@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block main_page %}
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+    <div class="w3-container w3-card-4 w3-white w3-margin">
+        <h2>Modificaciones de perfil</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="w3-button w3-green">Aplicar modificaciones</button>
+            <a href="{% url 'profile' %}" class="w3-button w3-red">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

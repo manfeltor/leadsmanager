@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block main_page %}
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+    <div class="w3-container w3-card-4 w3-white w3-margin">
+        <h2>Mi perfil</h2>
+        <p><strong>Usuario:</strong> {{ user.username }}</p>
+        <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+        <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Telefono:</strong> {{ user.phone_number }}</p>
+        <a href="{% url 'update_profile' %}" class="w3-button w3-blue">Editar Perfil</a>
+        <a href="{% url 'change_password' %}" class="w3-button w3-red">Cambiar contraseña</a>
+    </div>
+</div>
+{% endblock %}

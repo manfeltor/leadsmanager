@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login requerido</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body class="w3-light-grey">
+
+<div class="w3-container w3-card-4 w3-white w3-margin">
+    <h2>Login Requerido</h2>
+    <p>Necesita estar logueado para acceder a esta pagina.</p>
+
+    <!-- Error Message Block -->
+    {% if messages %}
+    <div class="error-message w3-panel w3-red">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Login Form -->
+    <form action="{% url 'custom_login' %}" method="post" class="w3-container">
+        {% csrf_token %}
+        <div class="w3-section">
+            <label><b>Usuario</b></label>
+            <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter Username" name="username" required>
+            <label><b>Contraseña</b></label>
+            <input class="w3-input w3-border" type="password" placeholder="Enter Password" name="password" required>
+            <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Login</button>
+            <a href="{% url 'home' %}" class="w3-button w3-block w3-green w3-section w3-padding"><i class="fa fa-bank fa-fw"></i>regresame a la pagina principal</a>
+        </div>
+    </form>
+</div>
