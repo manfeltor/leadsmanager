@@ -25,10 +25,13 @@ class ManualFormSubmissionForm(forms.ModelForm):
     empresa = forms.CharField(required=True)
     estado = forms.ChoiceField(choices=ESTADO_CHOICES, required=True)
     assigned_user = forms.ModelChoiceField(queryset=CustomUser.objects.all(), required=True)
-    
+    razon_social = forms.CharField(required=True)
+    mail = forms.EmailField(required=True)
+
     # Optional fields
-    razon_social = forms.CharField(required=False)
     nombre_y_apellido = forms.CharField(required=False)
-    mail = forms.EmailField(required=False)
     telefono = forms.CharField(required=False)
     mensaje = forms.CharField(widget=forms.Textarea, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(ManualFormSubmissionForm, self).__init__(*args, **kwargs)
