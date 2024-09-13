@@ -30,11 +30,12 @@ class CustomUserCreationForm(UserCreationForm):
             'password_too_short': "La contraseña debe contener almenos 8 caracteres.",
             'password_too_common': "Contraseña muy comun.",
             'password_entirely_numeric': "La contraseña no puede ser enteramente numerica.",
-        }
-
-        self.fields['password2'].error_messages = {
             'password_mismatch': "Las contraseñas no coinciden.",
         }
+
+        # self.fields['password2'].error_messages = {
+        #     'password_mismatch': "Las contraseñas no coinciden.",
+        # }
 
         self.fields['password1'].help_text = ""
         self.fields['password2'].help_text = ""

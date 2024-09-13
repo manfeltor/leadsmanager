@@ -5,6 +5,10 @@ from usersapp.forms import CustomUserCreationForm, UserProfileUpdateForm, Custom
 from usersapp.models import CustomUser
 
 class CustomUserCreationFormTest(TestCase):
+    
+    error_messages = {
+        'password_mismatch': "Las contraseñas no coinciden.",
+    }
 
     def test_valid_form(self):
         """Test valid CustomUserCreationForm"""
@@ -30,8 +34,9 @@ class CustomUserCreationFormTest(TestCase):
         }
         form = CustomUserCreationForm(data=form_data)
         self.assertFalse(form.is_valid())
+        
         self.assertIn('password2', form.errors)
-        self.assertEqual(form.errors['password2'], ['Las contraseñas no coinciden.'])
+        self.assertEqual(form.errors['password2'], ["Las contraseñas no coinciden."])
 
 class UserProfileUpdateFormTest(TestCase):
 

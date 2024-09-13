@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'landingapp',
     'django_apscheduler',
     'formsapp',
-    'usersapp'
+    'usersapp',
 ]
 
 MIDDLEWARE = [
