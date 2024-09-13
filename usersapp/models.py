@@ -5,6 +5,8 @@ MANAGEMENT_ROLES = {'admin', 'manager'}
 EMPLOYEE_ROLES = {'employee'}
 
 class CustomUser(AbstractUser):
+
+    
     MANAGER = 'manager'
     EMPLOYEE = 'employee'
     ADMIN = 'admin'

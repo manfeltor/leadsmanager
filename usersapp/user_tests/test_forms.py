@@ -3,6 +3,7 @@
 from django.test import TestCase
 from usersapp.forms import CustomUserCreationForm, UserProfileUpdateForm, CustomPasswordChangeForm
 from usersapp.models import CustomUser
+import traceback
 
 class CustomUserCreationFormTest(TestCase):
     
@@ -36,6 +37,7 @@ class CustomUserCreationFormTest(TestCase):
         self.assertFalse(form.is_valid())
         
         self.assertIn('password2', form.errors)
+        # traceback.print_stack()
         self.assertEqual(form.errors['password2'], ["Las contraseñas no coinciden."])
 
 class UserProfileUpdateFormTest(TestCase):

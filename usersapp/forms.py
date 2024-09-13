@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from .models import CustomUser
+import traceback
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -14,33 +15,16 @@ class CustomUserCreationForm(UserCreationForm):
             (CustomUser.MANAGER, 'Manager'),
         ]
 
-        # Customize labels
-        self.fields['username'].label = "Nombre de usuario"
-        self.fields['first_name'].label = "Nombre"
-        self.fields['last_name'].label = "Apellido"
-        self.fields['email'].label = "Email"
-        self.fields['phone_number'].label = "Telefono"
-        self.fields['role'].label = "Rol"
-        self.fields['password1'].label = "Contraseña"
-        self.fields['password2'].label = "Confirma contraseña"
+    def clean_password2(self):
+        # Override clean_password2 to apply custom error message
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
 
-        # Customize password validation error messages
-        self.fields['password1'].error_messages = {
-            'password_too_similar': "Contraseña muy similar a los datos.",
-            'password_too_short': "La contraseña debe contener almenos 8 caracteres.",
-            'password_too_common': "Contraseña muy comun.",
-            'password_entirely_numeric': "La contraseña no puede ser enteramente numerica.",
-            'password_mismatch': "Las contraseñas no coinciden.",
-        }
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Las contraseñas no coinciden.")  # Your custom error message
 
-        # self.fields['password2'].error_messages = {
-        #     'password_mismatch': "Las contraseñas no coinciden.",
-        # }
-
-        self.fields['password1'].help_text = ""
-        self.fields['password2'].help_text = ""
-        self.fields['username'].help_text = "maximo 150 caracteres entre letras, digitos y @/./+/-/_ unicamente."
-
+        return password2
+    
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
