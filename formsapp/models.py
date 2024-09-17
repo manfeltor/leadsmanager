@@ -28,7 +28,6 @@ class Campaign(models.Model):
         return self.name
 
 class FormSubmission(models.Model):
-
     empresa = models.CharField(max_length=255)
     fecha_creacion = models.DateTimeField()
     razon_social = models.CharField(max_length=255, blank=True, null=True)
@@ -43,13 +42,13 @@ class FormSubmission(models.Model):
     estado = models.CharField(max_length=50, choices=ESTADO_CHOICES)
     form_id = models.IntegerField()
     submission_id = models.IntegerField(unique=True)
-    data = models.JSONField()  # Store the raw JSON data
+    data = models.JSONField(default=dict)  # Default value for JSONField
     assigned_user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_user')
     management_message = models.TextField(null=True, blank=True)
     campaign = models.ForeignKey('Campaign', on_delete=models.SET_NULL, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  # Extract the user from kwargs
+        user = kwargs.pop('user', None)
 
         if self.pk:  # If this is an update
             old_instance = FormSubmission.objects.get(pk=self.pk)
@@ -60,15 +59,18 @@ class FormSubmission(models.Model):
                     new_status=self.estado,
                     updated_by=user
                 )
+
+            super(FormSubmission, self).save(*args, **kwargs)
+
         else:  # If this is a new submission
+            super(FormSubmission, self).save(*args, **kwargs)
+
             LeadHistory.objects.create(
                 form_submission=self,
                 previous_status=None,
                 new_status=self.estado,
                 updated_by=user
             )
-
-        super(FormSubmission, self).save(*args, **kwargs)
 
     # def is_status_change_allowed(self, new_status, user):
     #     # Get the current and new status hierarchy levels

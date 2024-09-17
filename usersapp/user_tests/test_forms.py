@@ -1,5 +1,3 @@
-# usersapp/tests/test_forms.py
-
 from django.test import TestCase
 from usersapp.forms import CustomUserCreationForm, UserProfileUpdateForm, CustomPasswordChangeForm
 from usersapp.models import CustomUser
