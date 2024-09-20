@@ -1,7 +1,7 @@
 from decouple import config
 
 DEBUG = config('DEBUG', default=False, cast=bool)
-WPUSER = config('ftorres')
+WPUSER = config('WPUSER')
 WPPASS = config('WPPASS')
 SRTOK = config('SRTOK')
 

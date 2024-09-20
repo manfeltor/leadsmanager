@@ -19,11 +19,11 @@ class Command(BaseCommand):
                     simpli_route_data=simpli_route_data
                 )
 
-                if created:
+                # if created:
                     # self.stdout.write(self.style.SUCCESS(f"Created relation for OmsData.pedido: {oms_data.pedido}"))
 
             except SimpliRouteData.DoesNotExist:
                 # Handle case where no matching SimpliRouteData entry is found
-                # self.stdout.write(self.style.WARNING(f"No matching SimpliRouteData for OmsData.pedido: {oms_data.pedido}"))
+                self.stdout.write(self.style.WARNING(f"No matching SimpliRouteData for OmsData.pedido: {oms_data.pedido}"))
 
         self.stdout.write(self.style.SUCCESS("OrderTrackingRelation population completed"))

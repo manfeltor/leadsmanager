@@ -65,8 +65,8 @@ class OmsData(models.Model):
     
 
 class OrderTrackingRelation(models.Model):
-    oms_data = models.ForeignKey('OmsData', on_delete=models.CASCADE)
-    simpli_route_data = models.ForeignKey('SimpliRouteData', on_delete=models.CASCADE)
+    oms_data = models.ForeignKey('OmsData', on_delete=models.SET_NULL, null=True, blank=True)
+    simpli_route_data = models.ForeignKey('SimpliRouteData', on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
-        return f"OrderTrackingRelation({self.oms_data.pedido}, {self.simpli_route_data.tracking_id})"
+        return f"OrderTrackingRelation({self.oms_data.pedido if self.oms_data else 'No OmsData'}, {self.simpli_route_data.tracking_id if self.simpli_route_data else 'No SimpliRouteData'})"

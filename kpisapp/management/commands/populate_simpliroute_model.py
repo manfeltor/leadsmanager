@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import concurrent.futures
 from django.core.management.base import BaseCommand
 from kpisapp.models import SimpliRouteData, OBSERVATION_CHOICES
-from ....leadsmanager.authvars import SRTOK
+from leadsmanager.authvars import SRTOK
 
 # API URL and headers
 url = "https://api.simpliroute.com/v1/routes/visits/"
