@@ -19,7 +19,7 @@ OBSERVATION_CHOICES = [
 class SimpliRouteData(models.Model):
     # Django's internal ID (AutoField) will be used automatically as a primary key.
     api_id = models.BigIntegerField(unique=True)  # This stores the ID from the API
-    tracking_id = models.CharField(max_length=50)
+    tracking_id = models.CharField(max_length=50, unique=True)
     status = models.CharField(max_length=50)
     title = models.CharField(max_length=255)
     reference = models.CharField(max_length=255, blank=True, null=True)
@@ -33,3 +33,40 @@ class SimpliRouteData(models.Model):
 
     def __str__(self):
         return f"Delivery {self.api_id} - {self.title}"
+    
+
+class OmsData(models.Model):
+    pedido = models.CharField(max_length=50)
+    flujo = models.CharField(max_length=5)
+    seller = models.CharField(max_length=50)
+    sucCodigo = models.CharField(max_length=50)
+    sucursal = models.CharField(max_length=10)
+    estadoPedido = models.CharField(max_length=50)
+    fechaCreacion = models.DateTimeField()
+    fechaRecepcion = models.DateTimeField(null=True, blank=True)
+    fechaDespacho = models.DateTimeField(null=True, blank=True)
+    fechaEntrega = models.DateTimeField(null=True, blank=True)
+    lpn = models.CharField(max_length=30)
+    estadoLpn = models.CharField(max_length=50)
+    zona = models.CharField(max_length=50)
+    transporte = models.CharField(max_length=100, null=True, blank=True)
+    trackingColecta = models.CharField(max_length=255, null=True, blank=True)
+    trackingDistribucion = models.CharField(max_length=255, null=True, blank=True)
+    trackingTransporte = models.CharField(max_length=255, null=True, blank=True)
+    fechaRecepcion = models.DateTimeField(null=True, blank=True)
+    tipo = models.CharField(max_length=50, null=True, blank=True)
+    codigoPostal = models.CharField(max_length=20)
+    tte = models.CharField(max_length=100, null=True, blank=True)
+    tteSucursalDistribucion = models.CharField(max_length=100, null=True, blank=True)
+    tiendaEntrega = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"Order {self.pedido}"
+    
+
+class OrderTrackingRelation(models.Model):
+    oms_data = models.ForeignKey('OmsData', on_delete=models.CASCADE)
+    simpli_route_data = models.ForeignKey('SimpliRouteData', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"OrderTrackingRelation({self.oms_data.pedido}, {self.simpli_route_data.tracking_id})"
