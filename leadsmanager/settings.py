@@ -89,8 +89,18 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+# config for production level
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # or 'mysql' depending on your DB
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),  # Cloud SQL connection
+#         'PORT': config('DB_PORT', default='5432'),  # default port for PostgreSQL
+#     }
+# }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

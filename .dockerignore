@@ -1,0 +1,15 @@
+# Ignore SQLite database file
+*.sqlite3
+
+# Ignore Python cache files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore other unnecessary files
+# .env
+.vscode
+.git
+node_modules
+static/
