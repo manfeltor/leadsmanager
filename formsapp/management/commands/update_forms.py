@@ -3,7 +3,7 @@ from formsapp.models import FormSubmission
 import requests
 from requests.auth import HTTPBasicAuth
 import logging
-from ....leadsmanager.authvars import usrnm as a, passw as b, frmids as f
+from leadsmanager.authvars import usrnm as a, passw as b, frmids as f
 from .populate_formsubmission import normalize_submission
 
 # Configure logging

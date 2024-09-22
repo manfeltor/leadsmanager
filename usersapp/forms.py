@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from .models import CustomUser
+from .models import CustomUser, Company
 
 class CustomUserCreationForm(UserCreationForm):
     company = forms.ModelChoiceField(queryset=Company.objects.all(), required=False)

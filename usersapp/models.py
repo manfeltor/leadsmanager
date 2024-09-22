@@ -49,7 +49,7 @@ class UserAttribute(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='attributes')
     relacion = models.CharField(max_length=20, choices=RELACION_CHOICES, default=EMPLOYEE)
     # Use a ForeignKey to the Company model
-    compania = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='users')
+    comp = models.ForeignKey(Company, on_delete=models.SET_NULL, related_name='user_attributes', null=True)
 
     def __str__(self):
         return f'{self.user.username} - {self.get_relacion_display()}'
