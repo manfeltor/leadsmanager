@@ -153,4 +153,3 @@ def interactive_line_plot(df, x_column, y_column, graph_title="Default Line Char
     graph_json = fig.to_json()
 
     return graph_json, regression_info
-

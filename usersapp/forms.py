@@ -1,11 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from .models import CustomUser
+from .models import CustomUser, Company
 
 class CustomUserCreationForm(UserCreationForm):
+    company = forms.ModelChoiceField(queryset=Company.objects.all(), required=False)
+
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'role', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'role', 'company', 'password1', 'password2']
 
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
@@ -14,22 +16,23 @@ class CustomUserCreationForm(UserCreationForm):
             (CustomUser.MANAGER, 'Manager'),
         ]
 
-        # Customize labels
+        # Customize labels and help texts
         self.fields['username'].label = "Nombre de usuario"
         self.fields['first_name'].label = "Nombre"
         self.fields['last_name'].label = "Apellido"
         self.fields['email'].label = "Email"
         self.fields['phone_number'].label = "Telefono"
         self.fields['role'].label = "Rol"
+        self.fields['company'].label = "Compañía"
         self.fields['password1'].label = "Contraseña"
         self.fields['password2'].label = "Confirma contraseña"
 
         # Customize password validation error messages
         self.fields['password1'].error_messages = {
             'password_too_similar': "Contraseña muy similar a los datos.",
-            'password_too_short': "La contraseña debe contener almenos 8 caracteres.",
-            'password_too_common': "Contraseña muy comun.",
-            'password_entirely_numeric': "La contraseña no puede ser enteramente numerica.",
+            'password_too_short': "La contraseña debe contener al menos 8 caracteres.",
+            'password_too_common': "Contraseña muy común.",
+            'password_entirely_numeric': "La contraseña no puede ser enteramente numérica.",
         }
 
         self.fields['password2'].error_messages = {
@@ -38,7 +41,7 @@ class CustomUserCreationForm(UserCreationForm):
 
         self.fields['password1'].help_text = ""
         self.fields['password2'].help_text = ""
-        self.fields['username'].help_text = "maximo 150 caracteres entre letras, digitos y @/./+/-/_ unicamente."
+        self.fields['username'].help_text = "Máximo 150 caracteres entre letras, dígitos y @/./+/-/_ únicamente."
 
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:

@@ -70,17 +70,6 @@ class FormSubmission(models.Model):
 
         super(FormSubmission, self).save(*args, **kwargs)
 
-    # def is_status_change_allowed(self, new_status, user):
-    #     # Get the current and new status hierarchy levels
-    #     current_status_hierarchy = dict((status[0], status[2]) for status in ESTADO_CHOICES).get(self.estado)
-    #     new_status_hierarchy = dict((status[0], status[2]) for status in ESTADO_CHOICES).get(new_status)
-
-    #     # Management users can always change the status
-    #     if user.is_management:
-    #         return True
-
-    #     # Non-management users can only move the status forward
-    #     return new_status_hierarchy >= current_status_hierarchy
 
 class LeadHistory(models.Model):
     

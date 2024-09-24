@@ -4,7 +4,7 @@ import json
 from django.core.management.base import BaseCommand
 from formsapp.models import FormSubmission
 import logging
-from .authvars import usrnm as a, passw as b, frmids as f
+from leadsmanager.authvars import usrnm as a, passw as b, frmids as f
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: gunicorn --workers=2 leadsmanager.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - ./db.sqlite3:/app/db.sqlite3  # SQLite volume for persistence
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - DJANGO_SETTINGS_MODULE=leadsmanager.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A leadsmanager worker --loglevel=info
+    volumes:
+      - .:/app
+      - ./db.sqlite3:/app/db.sqlite3
+    depends_on:
+      - redis
+    environment:
+      - DJANGO_SETTINGS_MODULE=leadsmanager.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+
+  celery-beat:
+    build: .
+    command: celery -A leadsmanager beat --loglevel=info
+    volumes:
+      - .:/app
+      - ./db.sqlite3:/app/db.sqlite3
+    depends_on:
+      - redis
+    environment:
+      - DJANGO_SETTINGS_MODULE=leadsmanager.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0

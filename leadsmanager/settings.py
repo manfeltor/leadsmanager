@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
+from celery.schedules import crontab
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,7 +44,8 @@ INSTALLED_APPS = [
     'landingapp',
     'django_apscheduler',
     'formsapp',
-    'usersapp'
+    'usersapp',
+    'kpisapp'
 ]
 
 MIDDLEWARE = [
@@ -85,8 +89,18 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+# config for production level
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # or 'mysql' depending on your DB
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),  # Cloud SQL connection
+#         'PORT': config('DB_PORT', default='5432'),  # default port for PostgreSQL
+#     }
+# }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -140,3 +154,14 @@ APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 AUTH_USER_MODEL = 'usersapp.CustomUser'
 
 LOGIN_URL = 'custom_login'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'fetch-form-submissions-every-3-minutes': {
+        'task': 'formsapp.tasks.fetch_new_submissions',
+        'schedule': crontab(minute='*/3'),
+    },
+}
