@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Define the folder where the Excel files are located
-        folder_path = r"C:\Users\manfe\Downloads\tms_compi"  # Change this to your folder path
+        folder_path = r"compoms"  # Change this to your folder path
 
         # Iterate over all files in the folder
         for filename in os.listdir(folder_path):

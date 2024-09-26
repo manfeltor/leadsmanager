@@ -40,7 +40,7 @@ class OmsData(models.Model):
     flujo = models.CharField(max_length=5)
     seller = models.CharField(max_length=50)
     sucCodigo = models.CharField(max_length=50)
-    sucursal = models.CharField(max_length=10)
+    sucursal = models.CharField(max_length=50)
     estadoPedido = models.CharField(max_length=50)
     fechaCreacion = models.DateTimeField()
     fechaRecepcion = models.DateTimeField(null=True, blank=True)

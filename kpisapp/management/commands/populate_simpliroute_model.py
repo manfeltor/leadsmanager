@@ -78,7 +78,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Define the start and end dates
         start_date = datetime(2024, 1, 1)
-        end_date = datetime(2024, 9, 1)
+        end_date = datetime(2024, 9, 15)
 
         # Process data month by month
         current_date = start_date

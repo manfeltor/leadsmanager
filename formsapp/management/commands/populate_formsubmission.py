@@ -71,7 +71,8 @@ def normalize_submission(submission, form_id):
         "estado": estado,
         "form_id": form_id,
         "data": submission,  # Store the raw JSON data
-        "assigned_user_id": 3 if form_id in [3, 4, 5] else 2
+        # "assigned_user_id": 3 if form_id in [3, 4, 5] else 2
+        "assigned_user_id": 2
     }
     return processed
 

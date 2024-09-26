@@ -26,7 +26,7 @@ class CustomUser(AbstractUser):
 
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=EMPLOYEE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="users", null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, related_name="users", null=True, blank=True)
 
     def __str__(self):
         return self.username

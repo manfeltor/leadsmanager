@@ -57,7 +57,7 @@ def normalize_submission(submission, form_id):
     }
     return processed
 
-initial_user = 6
+initial_user = 2
 current_campaign = None
 
 @shared_task
