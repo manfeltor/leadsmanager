@@ -79,27 +79,32 @@ TEMPLATES = [
 WSGI_APPLICATION = 'leadsmanager.wsgi.application'
 
 
-# Database
+# Database for dev
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
-    }
-}
-
-# config for production level
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',  # or 'mysql' depending on your DB
-#         'NAME': config('DB_NAME'),
-#         'USER': config('DB_USER'),
-#         'PASSWORD': config('DB_PASSWORD'),
-#         'HOST': config('DB_HOST'),  # Cloud SQL connection
-#         'PORT': config('DB_PORT', default='5432'),  # default port for PostgreSQL
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / "db.sqlite3",
 #     }
 # }
+
+
+# Database for prod on GCP
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST', default='127.0.0.1'),
+        'PORT': config('DB_PORT', default='3306'),
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',
+            'charset': 'utf8mb4',
+        },
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -149,7 +154,7 @@ STATICFILES_DIRS = [
 # STATIC_ROOT = os.path.join(BASE_DIR, 'templates')
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
-APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 AUTH_USER_MODEL = 'usersapp.CustomUser'
 
@@ -162,6 +167,20 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'fetch-form-submissions-every-3-minutes': {
         'task': 'formsapp.tasks.fetch_new_submissions',
-        'schedule': crontab(minute='*/3'),
+        'schedule': crontab(minute='*/60'),
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
     },
 }
