@@ -1,10 +1,11 @@
 from django.urls import path
 from .views import forms_list_view, form_detail_view, form_edit_view, user_leads_view, manual_form_submission_view
-from .views import user_form_detail_view, user_form_edit_view, status_change_not_allowed_view
+from .views import user_form_detail_view, user_form_edit_view, status_change_not_allowed_view, update_submissions_from_excel
 from usersapp.views import unauthorized_view
 
 urlpatterns = [
     path('list/', forms_list_view, name='forms_list'),
+    path('update-submissions/', update_submissions_from_excel, name='update_submissions'),
     path('detail/<int:submission_id>/', form_detail_view, name='form_detail'),
     path('edit/<int:submission_id>/', form_edit_view, name='form_edit'),
     path('unauthorized/', unauthorized_view , name='unauthorized'),

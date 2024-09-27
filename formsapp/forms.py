@@ -41,3 +41,6 @@ class ManualFormSubmissionForm(forms.ModelForm):
         self.fields['assigned_user'].help_text = "obligatorio"
         self.fields['razon_social'].help_text = "obligatorio"
         self.fields['mail'].help_text = "obligatorio"
+        
+class UploadExcelForm(forms.Form):
+    excel_file = forms.FileField(label='Seleccione un archivo Excel')

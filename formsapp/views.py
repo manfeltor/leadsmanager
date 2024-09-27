@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import FormSubmission, CustomUser, ESTADO_CHOICES
-from .forms import FormSubmissionEditForm, ManualFormSubmissionForm
+from .forms import FormSubmissionEditForm, ManualFormSubmissionForm, UploadExcelForm
 from django.utils.dateparse import parse_date
 from django.db.models import Max
 from django.utils import timezone
+import pandas as pd
+from django.contrib import messages
 
 @login_required
 def forms_list_view(request):
@@ -161,3 +163,42 @@ def manual_form_submission_view(request):
     form = ManualFormSubmissionForm()
     print("Rendering manual form submission page...")
     return render(request, 'manual_form_submission.html', {'form': form})
+
+@login_required
+@user_passes_test(lambda u: u.is_management)
+def update_submissions_from_excel(request):
+    if request.method == 'POST':
+        form = UploadExcelForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = form.cleaned_data['excel_file']
+
+            # Process the Excel file using Pandas
+            df = pd.read_excel(excel_file)
+
+            # Ensure the required columns exist in the Excel file
+            if 'mail' not in df.columns or 'estado' not in df.columns or 'cliente' not in df.columns:
+                messages.error(request, "El archivo Excel debe contener las columnas 'mail', 'estado' y 'cliente'.")
+                return redirect('forms_list')
+
+            # Iterate over FormSubmission objects to update them
+            updated_count = 0
+            for submission in FormSubmission.objects.exclude(estado='negativo'):
+                matched_row = df[df['mail'] == submission.mail]
+
+                if matched_row.empty:
+                    matched_row = df[df['cliente'] == submission.razon_social]
+
+                if matched_row.empty:
+                    submission.estado = 'noDefinido'
+                else:
+                    submission.estado = matched_row['estado'].values[0]
+
+                submission.save()
+                updated_count += 1
+
+            messages.success(request, f"{updated_count} registros actualizados con éxito.")
+            return redirect('forms_list')
+    else:
+        form = UploadExcelForm()
+
+    return redirect('forms_list')
