@@ -1,5 +1,6 @@
-# Ignore SQLite database file
+# Ignore SQLite database file, AND ACTIVATE THE IGNORE OF ENV FOR PRODUCTION
 *.sqlite3
+.env
 
 # Ignore Python cache files
 __pycache__
@@ -8,7 +9,6 @@ __pycache__
 *.pyd
 
 # Ignore other unnecessary files
-# .env
 .vscode
 .git
 node_modules

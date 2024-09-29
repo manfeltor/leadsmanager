@@ -4,7 +4,7 @@ import json
 from django.core.management.base import BaseCommand
 from formsapp.models import FormSubmission
 import logging
-from leadsmanager.authvars import usrnm as a, passw as b, frmids as f
+from leadsmanager.authvars import WPUSER as a, WPPASS as b, frmids as f, WPCUSTOMAPISUBM as d
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -16,7 +16,7 @@ password = b
 form_ids = f
 
 # API base URL
-base_api_url = 'https://intralog.com.ar/wp-json/custom/v1/form-submissions/'
+base_api_url = d
 
 def get_form_submissions(api_url, username, password):
     try:

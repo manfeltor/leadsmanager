@@ -5,16 +5,9 @@ services:
     build:
       context: .
     image: gcr.io/leadsmanager01/leadsmanager-web:latest
-    command: gunicorn --workers=2 leadsmanager.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn --workers=2 leadsmanager.wsgi:application --bind 0.0.0.0:${PORT:-8080}
     ports:
-      - "8000:8000"
-    environment:
-      - DJANGO_SETTINGS_MODULE=leadsmanager.settings
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - DATABASE_URL=${DATABASE_URL}  # For local dev
-      - CLOUD_SQL_CONNECTION_NAME=${CLOUD_SQL_CONNECTION_NAME}  # Used when deploying to Cloud Run
-      - DB_HOST=127.0.0.1  # Local dev
-      - DB_PORT=3306
+      - "${PORT:-8080}:${PORT:-8080}"      
 
   celery:
     build:
@@ -23,7 +16,7 @@ services:
     command: celery -A leadsmanager worker --loglevel=info
     environment:
       - DJANGO_SETTINGS_MODULE=leadsmanager.settings
-      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:${REDIS_PORT}/0
       - DATABASE_URL=${DATABASE_URL}
       - CLOUD_SQL_CONNECTION_NAME=${CLOUD_SQL_CONNECTION_NAME}
 
@@ -34,14 +27,16 @@ services:
     command: celery -A leadsmanager beat --loglevel=info
     environment:
       - DJANGO_SETTINGS_MODULE=leadsmanager.settings
-      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:${REDIS_PORT}/0
       - DATABASE_URL=${DATABASE_URL}
       - CLOUD_SQL_CONNECTION_NAME=${CLOUD_SQL_CONNECTION_NAME}
 
   redis:
     image: "redis:alpine"
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"  # Default to port 6379
+    environment:
+      - REDIS_PORT=${REDIS_PORT:-6379}
 
 volumes:
   db_data:
