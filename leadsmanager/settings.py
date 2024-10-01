@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-from .authvars import DB_NAME, DB_USR, DB_PASS, DB_HOST, DB_PORT, SECRET_KEY, APPHOST
+from .authvars import DB_NAME, DB_USR, DB_PASS, DB_HOST, DB_PORT, SECRET_KEY
 from celery.schedules import crontab
 
 
@@ -26,10 +26,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECRET_KEY
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://leadsmanager-web-722153627867.us-central1.run.app'
+]
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookies are only sent over HTTPS
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', APPHOST]
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'leadsmanager-web-722153627867.us-central1.run.app'
+    ]
 
 # Application definition
 
