@@ -7,11 +7,17 @@ from django.db.models import Max
 from django.utils import timezone
 import pandas as pd
 from django.contrib import messages
+from leadsmanager.authvars import WPUSER, WPPASS, frmids, WPCUSTOMAPISUBM
+import requests
+from requests.auth import HTTPBasicAuth
+from .management.commands.populate_formsubmission import normalize_submission
+from django.http import HttpResponse
+import logging
 
 @login_required
 def forms_list_view(request):
     # Start with all forms
-    forms = FormSubmission.objects.all()
+    forms = FormSubmission.objects.all().order_by('-submission_id')
 
     # Get filter parameters from the request
     assigned_user_id = request.GET.get('assigned_user')
@@ -202,3 +208,41 @@ def update_submissions_from_excel(request):
         form = UploadExcelForm()
 
     return redirect('forms_list')
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def get_form_submissions(api_url, username, password):
+    try:
+        response = requests.get(api_url, auth=HTTPBasicAuth(username, password))
+        if response.status_code == 200:
+            logger.info(f"Successfully retrieved data from {api_url}")
+            return response.json()
+        else:
+            logger.error(f"Failed to retrieve data from {api_url}: {response.status_code}")
+            logger.error(f"Error message: {response.text}")
+            return None
+    except requests.RequestException as e:
+        logger.error(f"Request failed for {api_url}: {e}")
+        return None
+
+# View to fetch new submissions and update the database
+@login_required
+def fetch_new_submissions_view(request):
+    all_data = []
+    for form_id in frmids:
+        full_api_url = f'{WPCUSTOMAPISUBM}{form_id}'
+        data = get_form_submissions(full_api_url, WPUSER, WPPASS)
+        if data:
+            form_submissions = data.get('form_submissions', [])
+            for submission in form_submissions:
+                submission_id = submission.get('id')
+                if not FormSubmission.objects.filter(submission_id=submission_id).exists():
+                    processed_submission = normalize_submission(submission, form_id)
+                    all_data.append(processed_submission)
+
+    # Bulk create new FormSubmission entries
+    form_submissions = [FormSubmission(**data) for data in all_data]
+    FormSubmission.objects.bulk_create(form_submissions, ignore_conflicts=True)
+
+    return HttpResponse("New submissions fetched successfully.")

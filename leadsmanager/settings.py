@@ -87,20 +87,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'leadsmanager.wsgi.application'
 
-# Database config will take
+# Database config for prod, remember you must mount as env vars (Gsecrets)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': DB_NAME,
+#         'USER': DB_USR,
+#         'PASSWORD': DB_PASS,
+#         'HOST': DB_HOST,
+#         'PORT': DB_PORT,
+#         'OPTIONS': {
+#             'sql_mode': 'STRICT_TRANS_TABLES',
+#             'charset': 'utf8mb4',
+#         },
+#     }
+# }
 
+# Database config for local testing, tinker with your local config
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': DB_NAME,
-        'USER': DB_USR,
-        'PASSWORD': DB_PASS,
-        'HOST': DB_HOST,
-        'PORT': DB_PORT,
-        'OPTIONS': {
-            'sql_mode': 'STRICT_TRANS_TABLES',
-            'charset': 'utf8mb4',
-        },
+        'ENGINE': 'django.db.backends.mysql',  # MySQL database engine
+        'NAME': 'leadslocaldb',          # Name of your MySQL database
+        'USER': 'root',         # MySQL username
+        'PASSWORD': 'Sussini.1341',     # MySQL password
+        'HOST': 'localhost',                   # Usually localhost if it's on the same server
+        'PORT': '3306',                        # Default MySQL port (can be left empty if default)
     }
 }
 
@@ -130,7 +141,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
