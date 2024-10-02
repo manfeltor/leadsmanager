@@ -25,7 +25,7 @@ def base(req):
         'contactado': 'Inicializados',
         'faltaCotizar': 'Inicializados',
         'cotizado': 'Inicializados',
-        'interezadoAvanzar': 'Leads activos',
+        'interesadoAvanzar': 'Leads activos',
         'gestionExitosa': 'Leads activos',
         'pospuesto': 'Hold',
         'noAvanzo': 'Inactivos',
@@ -61,7 +61,7 @@ def base(req):
         state = lead['estado']
         if state in ['pendiente', 'asignado', 'contactado', 'pospuesto']:
             cold_count += lead['count']
-        elif state in ['faltaCotizar', 'cotizado', 'interezadoAvanzar', 'gestionExitosa']:
+        elif state in ['faltaCotizar', 'cotizado', 'interesadoAvanzar', 'gestionExitosa']:
             active_count += lead['count']
         elif state in ['noAvanzo', 'noViable', 'nuevoCliente', 'negativo']:
             closed_count += lead['count']
@@ -123,7 +123,7 @@ def category_breakdown_view(request):
         'contactado': 'Inicializados',
         'faltaCotizar': 'Inicializados',
         'cotizado': 'Inicializados',
-        'interezadoAvanzar': 'Leads activos',
+        'interesadoAvanzar': 'Leads activos',
         'gestionExitosa': 'Leads activos',
         'pospuesto': 'Hold',
         'noAvanzo': 'Inactivos',
