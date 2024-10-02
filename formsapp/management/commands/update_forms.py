@@ -49,4 +49,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         fetch_new_submissions()
-        self.stdout.write(self.style.SUCCESS('New submissions fetched successfully'))
+        self.stdout.write(self.style.SUCCESS('Nuevas entradas recuperadas con exito!!!'))

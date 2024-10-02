@@ -59,13 +59,13 @@
         <h2>Formularios Completados</h2>
         {% if request.user.is_management %}
         <!-- Fetch New Submissions Button -->
-        <button id="fetchBtn" class="w3-button w3-blue">Fetch New Submissions</button>
+        <button id="fetchBtn" class="w3-button w3-blue">Actualizar BD</button>
 
         <!-- Fetching Modal -->
         <div id="fetchingModal" class="w3-modal" style="display:none;">
             <div class="w3-modal-content">
                 <div class="w3-container">
-                    <h3>Fetching new submissions... please wait.</h3>
+                    <h3>Recuperando los nuevos mensajes, por favor aguarda......</h3>
                 </div>
             </div>
         </div>
