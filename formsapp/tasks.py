@@ -4,7 +4,7 @@ from requests.auth import HTTPBasicAuth
 from celery import shared_task
 from django.utils import timezone
 from formsapp.models import FormSubmission, CustomUser  # Import models
-from leadsmanager.authvars import usrnm as a, passw as b, frmids as f
+from leadsmanager.authvars import WPUSER, WPPASS, frmids
 from formsapp.management.commands.populate_formsubmission import determine_avance_estado
 
 # Configure logging
@@ -52,7 +52,9 @@ def normalize_submission(submission, form_id):
         "avance": avance,
         "estado": estado,
         "form_id": form_id,
-        "data": submission,  # Store the raw JSON data
+        "data": submission,
+        "assigned_user": 2,
+        # "campaign": None,
         # Use hardcoded values for 'assigned_user' and 'campaign'
     }
     return processed
@@ -72,9 +74,9 @@ def fetch_new_submissions():
     # Prepare to store the new form submissions
     all_data = []
     
-    for form_id in f:
+    for form_id in frmids:
         full_api_url = f'{base_api_url}{form_id}'
-        data = get_form_submissions(full_api_url, a, b)
+        data = get_form_submissions(full_api_url, WPUSER, WPPASS)
         
         if data:
             form_submissions = data.get('form_submissions', [])
@@ -93,7 +95,7 @@ def fetch_new_submissions():
                     )
 
                     # Add hardcoded 'assigned_user' and 'campaign' (None for now)
-                    processed_submission['assigned_user'] = assigned_user
+                    processed_submission['assigned_user'] = 2
                     processed_submission['campaign'] = current_campaign
                     
                     # Create a FormSubmission object

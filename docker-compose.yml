@@ -9,11 +9,28 @@ services:
     ports:
       - "${PORT:-8080}:${PORT:-8080}"     
 
+  celery-sample:
+    build:
+      context: .
+    image: gcr.io/leadsmanager01/leadsmanager-celery:latest
+    command: celery -A leadsmanager worker --loglevel=info
+    environment:
+      - DJANGO_SETTINGS_MODULE=leadsmanager.settings
+      - CELERY_BROKER_URL=redis://redis:${REDIS_PORT}/0
+      - DATABASE_URL=${DATABASE_URL}
+      - CLOUD_SQL_CONNECTION_NAME=${CLOUD_SQL_CONNECTION_NAME}
+
   celery:
     build:
       context: .
     image: gcr.io/leadsmanager01/leadsmanager-celery:latest
     command: celery -A leadsmanager worker --loglevel=info
+
+  celery-beat-sample:
+    build:
+      context: .
+    image: gcr.io/leadsmanager01/leadsmanager-celery-beat:latest
+    command: celery -A leadsmanager beat --loglevel=info
     environment:
       - DJANGO_SETTINGS_MODULE=leadsmanager.settings
       - CELERY_BROKER_URL=redis://redis:${REDIS_PORT}/0
@@ -25,18 +42,18 @@ services:
       context: .
     image: gcr.io/leadsmanager01/leadsmanager-celery-beat:latest
     command: celery -A leadsmanager beat --loglevel=info
-    environment:
-      - DJANGO_SETTINGS_MODULE=leadsmanager.settings
-      - CELERY_BROKER_URL=redis://redis:${REDIS_PORT}/0
-      - DATABASE_URL=${DATABASE_URL}
-      - CLOUD_SQL_CONNECTION_NAME=${CLOUD_SQL_CONNECTION_NAME}
 
-  redis:
+  redis-sample:
     image: "redis:alpine"
     ports:
       - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"  # Default to port 6379
     environment:
       - REDIS_PORT=${REDIS_PORT:-6379}
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"  # Default to port 6379
 
 volumes:
   db_data:

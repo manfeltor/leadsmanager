@@ -163,7 +163,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
-    'fetch-form-submissions-every-3-minutes': {
+    'fetch-form-submissions-every-60-minutes': {
         'task': 'formsapp.tasks.fetch_new_submissions',
         'schedule': crontab(minute='*/60'),
     },

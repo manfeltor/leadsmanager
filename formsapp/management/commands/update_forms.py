@@ -3,7 +3,7 @@ from formsapp.models import FormSubmission
 import requests
 from requests.auth import HTTPBasicAuth
 import logging
-from leadsmanager.authvars import usrnm as a, passw as b, frmids as f
+from leadsmanager.authvars import WPUSER, WPPASS, frmids
 from .populate_formsubmission import normalize_submission
 
 # Configure logging
@@ -29,9 +29,9 @@ def get_form_submissions(api_url, username, password):
 
 def fetch_new_submissions():
     all_data = []
-    for form_id in f:
+    for form_id in frmids:
         full_api_url = f'{base_api_url}{form_id}'
-        data = get_form_submissions(full_api_url, a, b)
+        data = get_form_submissions(full_api_url, WPUSER, WPPASS)
         if data:
             form_submissions = data.get('form_submissions', [])
             for submission in form_submissions:
