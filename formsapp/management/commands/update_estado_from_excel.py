@@ -31,7 +31,7 @@ class Command(BaseCommand):
 
             # Step 3: If no match is found, set estado to 'noDefinido'
             if matched_row.empty:
-                submission.estado = 'noDefinido'
+                submission.estado = submission.estado
             else:
                 # Update estado with the value from the matched row
                 submission.estado = matched_row['estado'].values[0]

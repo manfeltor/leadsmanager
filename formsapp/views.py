@@ -195,7 +195,7 @@ def update_submissions_from_excel(request):
                     matched_row = df[df['cliente'] == submission.razon_social]
 
                 if matched_row.empty:
-                    submission.estado = 'noDefinido'
+                    pass
                 else:
                     submission.estado = matched_row['estado'].values[0]
 
