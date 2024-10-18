@@ -26,14 +26,34 @@
                 <td>{{ user.last_name }}</td>
                 <td>{{ user.role }}</td>
                 {% if request.user.is_management %}
+                {% if request.user.id == user.id %}
+                <td>
+                    <a href="#" class="w3-button w3-blue">Tu</a>
+                </td>
+                {% elif user.username == 'admin' %}
+                <td>
+                    <a href="#" class="w3-button w3-blue">Sys admin</a>
+                </td>
+                {% else %}
                 <td>
                     <a href="{% url 'edit_user' user.id %}" class="w3-button w3-blue">Editar</a>
                 </td>
                 {% endif %}
+                {% endif %}
                 {% if request.user.is_staff %}
+                {% if request.user.id == user.id %}
+                <td>
+                    <a href="#" class="w3-button w3-red">Tu</a>
+                </td>
+                {% elif user.username == 'admin' %}
+                <td>
+                    <a href="#" class="w3-button w3-red">Sys admin</a>
+                </td>
+                {% else %}
                 <td>
                     <a href="{% url 'delete_user' user.id %}" class="w3-button w3-red">Eliminar</a>
                 </td>
+                {% endif %}
                 {% endif %}
             </tr>
             {% endfor %}

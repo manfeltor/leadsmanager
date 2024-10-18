@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from .authvars import DB_NAME, DB_USR, DB_PASS, DB_HOST, DB_PORT, SECRET_KEY
 from celery.schedules import crontab
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -54,8 +55,23 @@ INSTALLED_APPS = [
     'django_apscheduler',
     'formsapp',
     'usersapp',
-    'kpisapp'
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Make sure JWT auth is enabled
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # Require authentication by default
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Adjust to your needs
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -88,32 +104,32 @@ TEMPLATES = [
 WSGI_APPLICATION = 'leadsmanager.wsgi.application'
 
 # Database config for prod, remember you must mount as env vars (Gsecrets)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': DB_NAME,
-        'USER': DB_USR,
-        'PASSWORD': DB_PASS,
-        'HOST': DB_HOST,
-        'PORT': DB_PORT,
-        'OPTIONS': {
-            'sql_mode': 'STRICT_TRANS_TABLES',
-            'charset': 'utf8mb4',
-        },
-    }
-}
-
-# # Database config for local testing, tinker with your local config
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',  # MySQL database engine
-#         'NAME': 'leadslocaldb',          # Name of your MySQL database
-#         'USER': 'root',         # MySQL username
-#         'PASSWORD': 'Sussini.1341',     # MySQL password
-#         'HOST': 'localhost',                   # Usually localhost if it's on the same server
-#         'PORT': '3306',                        # Default MySQL port (can be left empty if default)
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': DB_NAME,
+#         'USER': DB_USR,
+#         'PASSWORD': DB_PASS,
+#         'HOST': DB_HOST,
+#         'PORT': DB_PORT,
+#         'OPTIONS': {
+#             'sql_mode': 'STRICT_TRANS_TABLES',
+#             'charset': 'utf8mb4',
+#         },
 #     }
 # }
+
+# Database config for local testing, tinker with your local config
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # MySQL database engine
+        'NAME': 'leadslocaldb',          # Name of your MySQL database
+        'USER': 'root',         # MySQL username
+        'PASSWORD': 'Sussini.1341',     # MySQL password
+        'HOST': 'localhost',                   # Usually localhost if it's on the same server
+        'PORT': '3306',                        # Default MySQL port (can be left empty if default)
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
