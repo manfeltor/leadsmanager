@@ -5,7 +5,7 @@ from usersapp.models import CustomUser
 #TODO push nuevo form carga manual subm .1, sobre edit manual form .1
 
 class FormSubmissionEditForm(forms.ModelForm):
-    assigned_user = forms.ModelChoiceField(queryset=CustomUser.objects.filter(role='employee'), required=False)
+    assigned_user = forms.ModelChoiceField(queryset=CustomUser.objects.filter(role__in=['employee', 'manager']), required=False)
     
     SERVICIO_CHOICES = [
     ('', '--------'),
