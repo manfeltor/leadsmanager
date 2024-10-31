@@ -113,3 +113,9 @@ def delete_user(request, user_id):
         return redirect('list_users')
 
     return render(request, 'delete_user_confirmation.html', {'user': user})
+
+
+@login_required
+def functions_view(request):
+
+    return render(request, 'functions.html')

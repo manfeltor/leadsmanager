@@ -1,8 +1,9 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from .views import login_view, user_list_view, create_user_view, unauthorized_view, update_profile_view
-from .views import profile_detail_view, change_password_view, user_edit_view, delete_user
+from .views import profile_detail_view, change_password_view, user_edit_view, delete_user, functions_view
 from .api import UserProfileAPI, UserListAPI
+from .mailfunc import main_func
 
 urlpatterns = [
     path('login/', login_view, name='login'),
@@ -16,6 +17,8 @@ urlpatterns = [
     path('updateprofile/', update_profile_view, name='update_profile'),
     path('profile/', profile_detail_view, name='profile'),
     path('profile/change_password/', change_password_view, name='change_password'),
+    path('usersfuncs/', functions_view, name='functions'),
+    path('usersfuncs/', functions_view, name='functions'),
     
     # API management endpoints
 
