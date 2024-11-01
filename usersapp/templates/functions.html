@@ -1,7 +1,47 @@
 {% extends 'base.html' %}
+{% csrf_token %}
 {% block main_page %}
-<div class="w3-main" style="margin-left:300px;margin-top:50px;">
-    <div class="w3-container" style="margin-top:50px;">
-        <h3>solo ajustando la sidebar</h3>        
+<div class="w3-container" style="margin-left:300px; margin-top:50px; margin-bottom: 50px;">
+    <h1 class="w3-xxxlarge"><b>Upload Reclamos Excel</b></h1>
+    <p>Please upload an Excel file to send personalized emails.</p>
+
+    <!-- File Upload Form -->
+    <form id="uploadMailForm" method="POST" enctype="multipart/form-data" action="{% url 'mails_reclamos' %}">
+        {% csrf_token %}
+        <input type="file" name="reclamos_excel_file" id="reclamos_excel_file" required>
+        <button type="submit" class="w3-button w3-blue w3-margin-top" onclick="return checkFileAndSubmitMail()">Send Mails</button>
+    </form>
 </div>
+
+<!-- Modal for Processing -->
+<div id="processingModal" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-top">
+        <div class="w3-container">
+            <span class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
+            <h3>Procesando...</h3>
+            <p>Por favor espera.</p>
+        </div>
+    </div>
+  </div>
+
+<script>
+    function checkFileAndSubmitMail() {
+        const fileInput = document.getElementById('reclamos_excel_file');
+
+        if (!fileInput.value) {
+            alert("Por favor selecciona un archivo para subir.");
+            return false;  // Prevent submission if no file is selected
+        }
+
+        showProcessingModal();  // Show modal during processing
+        return true;
+    }
+
+    function showProcessingModal() {
+        const modal = document.getElementById('processingModal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    }
+</script>
 {% endblock %}

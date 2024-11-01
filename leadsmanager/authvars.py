@@ -14,5 +14,6 @@ DB_PASS = os.environ.get('DB_PASS', config('DB_PASS'))
 DB_PORT = os.environ.get('DB_PORT', config('DB_PORT'))
 SECRET_KEY = os.environ.get('SECRET_KEY', config('SECRET_KEY'))
 APPHOST = os.environ.get('APPHOST', config('APPHOST'))
+PRFTAPIKEY = os.environ.get('PRFTAPIKEY', config('PRFTAPIKEY'))
 
 frmids = [7, 3, 4, 5]

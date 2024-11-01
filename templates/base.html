@@ -132,6 +132,20 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
 </div>
 
+{% if messages %}
+<div style="margin-left:300px;margin-top:50px;">
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            <div class="w3-panel w3-red">{{ message }}</div>
+        {% elif message.tags == 'success' %}
+            <div class="w3-panel w3-green">{{ message }}</div>
+        {% else %}
+            <div class="w3-panel">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
 <!-- !PAGE CONTENT! -->
 {% block main_page %}
 <div class="w3-main" style="margin-left:300px;margin-top:50px;">

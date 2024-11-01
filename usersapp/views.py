@@ -7,6 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from .forms import CustomUserCreationForm, UserProfileUpdateForm, CustomPasswordChangeForm
 from .forms import UserEditForm
 from django.contrib.auth import update_session_auth_hash
+from .mailfunc import main_func
 
 def login_view(request):
     if request.method == 'POST':
@@ -119,3 +120,18 @@ def delete_user(request, user_id):
 def functions_view(request):
 
     return render(request, 'functions.html')
+
+
+@login_required
+def send_mail_view(request):
+    if request.method == 'POST' and 'reclamos_excel_file' in request.FILES:
+        uploaded_file = request.FILES['reclamos_excel_file']  # Get the uploaded file
+        message_list = main_func(uploaded_file)  # Process the file
+
+        # Add each message to Django's messages framework
+        for level, text in message_list:
+            messages.add_message(request, level, text)
+
+        return redirect('functions')  # Redirect after processing
+
+    return render(request, 'functions.html')  # Render the form on GET request

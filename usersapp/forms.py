@@ -111,3 +111,5 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['role']
+
+
