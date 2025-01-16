@@ -219,4 +219,4 @@ git checkout -b feature/your-feature-name
 
 ## License
 
-This project is licensed under the MIT License. See LICENSE for details.
+This project is licensed under the GNU GENERAL PUBLIC LICENSE Version 3 GPLv3 License. See LICENSE for details.
