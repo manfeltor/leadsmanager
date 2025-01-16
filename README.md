@@ -1,140 +1,189 @@
-# LeadsManager
+# LeadsManager Project
 
-A Django-based web application for managing leads, tracking form submissions, and automating tasks using Celery.
+## Overview
+The **Leads Manager Project** is a web-based application designed to manage, track, and update leads from various sources. Built using Django, this system allows seamless integration with external APIs, provides robust form submission tracking, and includes a convenient feature for sending bulk emails using Perfit.
+
+This document outlines the structure, features, and usage of the application, focusing on its key components and functionality. For more specific technical documentation please refer to the docs directory.
+
+---
 
 ## Table of Contents
-- [Project Overview](#project-overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Deployment](#deployment)
-- [Setup (Development)](#setup-development)
-- [Usage](#usage)
-- [Planned features](#planned-features)
+- [Project Structure](#project-structure)
+- [Key Apps and Their Roles](#key-apps-and-their-roles)
+  - [Landing App](#landing-app)
+  - [Users App](#users-app)
+  - [Forms App](#forms-app)
+- [Environment Variables](#environment-variables)
+- [Perfit Mail Integration](#perfit-mail-integration)
+- [Running the Project](#running-the-project)
+- [Management Commands](#management-commands)
+- [Planned Features and Roadmap](#Planned-Features-and-Roadmap)
 - [Contributing](#contributing)
+- [License](#license)
 
-## Project Overview
+---
 
-LeadsManager is a lead management system designed to streamline the process of capturing, organizing, and managing customer inquiries. The platform integrates with external forms, processes leads into a centralized database, and allows users to manage, track, and follow up on these leads efficiently.
-
-The application architecture is built using Django, with Celery handling background task automation, MySQL for database management, and Redis for Celery task queuing. It’s deployed on **Google Cloud Run** for scalable and containerized service management.
-
-### Key Components:
-- **Forms Integration**: Captures customer information from multiple form sources and normalizes it into a unified lead management interface.
-- **Lead Management**: Enables team members to manage the lifecycle of a lead from inquiry to closure, including follow-up actions and status updates.
-- **Task Automation**: Uses Celery to automate routine tasks such as sending emails, performing follow-ups, and updating lead statuses.
-- **Role-Based Access Control**: Assigns different levels of permissions based on user roles, such as employee, manager, and admin.
-  
 ## Features
+- **Lead Management:** Track and manage leads submitted via integrated forms.
+- **Dynamic Filtering:** Filter leads by date, status, or assigned user.
+- **API Integration:** Automatically fetch leads from external APIs.
+- **Manual Lead Submission:** Add leads manually when required.
+- **History Tracking:** Maintain a history of lead status updates.
+- **Role-Based Access Control:** Restrict functionality based on user roles (Admin, Manager, Employee).
+- **Bulk Email Sending:** Easily send emails to contacts via Perfit.
 
-- **Lead Capture**: Integration with web forms for capturing lead data.
-- **Task Automation**: Automate tasks like email notifications and status updates using Celery.
-- **Lead Management Dashboard**: An intuitive interface for viewing, filtering, and managing leads.
-- **Analytics**: Real-time reporting and insights into lead conversions and performance.
-- **Role-Based Permissions**: Fine-grained control over user permissions and actions.
-- **Customizable Workflows**: Adaptable lead states and task automation workflows.
+---
 
 ## Tech Stack
+- **Backend:** Django 5.x
+- **Frontend:** HTML, CSS (W3.CSS framework), JavaScript
+- **Database:** MySQL
+- **Task Queue:** Celery with Redis
+- **APIs:** WordPress Custom Plugin for fetching leads
+- **Additional Libraries:**
+  - `pandas`: For processing Excel files
+  - `requests`: For API communication
+  - `plotly`: For interactive graphs
 
-- **Django 5.1.1**: Web framework for the core application.
-- **Celery 5.4.0**: Distributed task queue for background processing.
-- **MySQL**: Relational database used for storing lead data.
-- **Redis**: Task broker for Celery.
-- **Google Cloud Run**: Used for scalable, containerized deployment.
-- **Docker**: For containerizing the application for local development and production.
+---
 
-## Deployment
+## Project Structure
+leadsmanager/
+├── landingapp/ # Homepage and general views
+├── usersapp/ # User authentication and management
+├── formsapp/ # Form submissions and lead management
+├── static/ # Static assets (CSS, JS, images)
+├── templates/ # HTML templates
+├── manage.py # Django management commands entry point
+├── requirements.txt # Python dependencies
+├── docs/ # specific technical documentation about the apps, worflows, main features and db schema
+└── README.md # Project documentation
 
-To deploy this application on **Google Cloud Run**, follow the steps outlined in the [Deployment Documentation](docs/deployment.md). Here's a brief summary of the process:
+---
 
-1. Build the Docker image and push it to Google Container Registry.
-2. Deploy the image using Google Cloud Run and configure environment variables from Google Secrets.
-3. Set up MySQL using Google Cloud SQL and manage database migrations using Django.
+## Key Apps and Their Roles
 
-For more details, check the deployment instructions in the linked documentation.
+### Landing App
+**URL Prefix:** `/`
 
-## Setup (Development)
+- **Purpose:** Manages public-facing views, login functionality, and a lead summary dashboard.
+- **Features:**
+  - Home view with lead statistics.
+  - Custom login page.
+  - Interactive graphs for lead analysis (using Plotly).
 
-To run the LeadsManager project in your local environment, follow these steps:
+### Users App
+**URL Prefix:** `/users/`
 
-### Prerequisites:
-- Python 3.10 or later.
-- Docker (optional but recommended).
-- MySQL (or use a local database).
+- **Purpose:** Handles user authentication, profiles, and role-based permissions.
+- **Features:**
+  - User creation and management (Admins only).
+  - Profile editing and password changes.
+  - Role-based access to views and actions.
+- **Roles:**
+  - **Admin:** Full access to all features.
+  - **Manager:** Manage users and leads.
+  - **Employee:** Limited access to their assigned leads.
 
-### Steps:
+### Forms App
+**URL Prefix:** `/forms/`
 
-1. **Clone the repository:**
+- **Purpose:** Manages form submissions and lead lifecycle.
+- **Features:**
+  - View and filter form submissions.
+  - Update lead statuses manually or via bulk Excel upload.
+  - Fetch new submissions from external APIs.
+  - Track lead history for status changes.
 
-    ```bash
-    git clone https://github.com/yourrepo/leadsmanager.git
-    cd leadsmanager
-    ```
+---
 
-2. **Install dependencies:**
+## Environment Variables
+The application uses environment variables for sensitive data. These are stored in `authvars.py` and sourced from `.env` or environment secrets.
 
-    You can install Python dependencies using `pip` (recommended use a virtual env):
+| Variable             | Description                     |
+|----------------------|---------------------------------|
+| `DB_NAME`            | Database name                  |
+| `DB_USR`             | Database username              |
+| `DB_PASS`            | Database password              |
+| `DB_HOST`            | Database host                  |
+| `DB_PORT`            | Database port                  |
+| `SECRET_KEY`         | Django secret key              |
+| `WPCUSTOMAPISUBM`    | API base URL for fetching leads|
+| `WPUSER`             | WordPress API username         |
+| `WPPASS`             | WordPress API password         |
+| `PRFTAPIKEY`         | Perfit API key                 |
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+---
 
-3. **Set up the database:**
+## Perfit Mail Integration
+The **Perfit mail functionality** is a secondary feature added to support the operations team. It allows sending bulk emails for specific operations via the Perfit API. 
 
-    Apply migrations to set up the local database:
+**Use Cases:**
+- Process an uploaded Excel file.
+- Send unitary custom claim mails (templates vary depending on the nature of the claim.) for all submissions on the xlsx uploded file, to the Correo Argentino help desk service as requested.
 
-    ```bash
-    python manage.py migrate
-    ```
+---
 
-4. **Run the development server:**
+## Running the Project
 
-    Start the Django development server as insecure for static acces:
+### Prerequisites
+1. Install Python (3.8+), MySQL, and Redis.
+2. Set up a virtual environment and install dependencies:
+   ```
+   bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   venv\Scripts\activate     # Windows
+   pip install -r requirements.txt
+   ```
+3. Set up .env for environment variables:
 
-    ```bash
-    python manage.py runserver --insecure
-    ```
+### Local Setup
+1. Apply migrations:
+  ```
+   bash
+   python manage.py migrate
+   ```
+2. Create a superuser:
+  ```
+   bash
+   python manage.py createsuperuser
+   ```
+3. Start the server:
+  ```
+   bash
+   python manage.py runserver
+   ```
+4. Start Celery and Redis for task management (under development and testing):
+  ```
+   bash
+   redis-server
+  celery -A leadsmanager worker --loglevel=info
+   ```
 
-5. **Run Celery worker (in a new terminal):**
+## Management Commands
 
-    Start the Celery worker:
+### Available Commands:
+- python manage.py update_forms: Fetch new form submissions via API.
+- python manage.py update_estado_from_excel <path>: Update lead statuses from an Excel file.
+- python manage.py export_formsubmission_data: Export form submissions to an Excel file.
+- python manage.py clear_formsubmission: Clear all data from the FormSubmission table.
+- python manage.py clear_forms_stat_history: Clear lead status history.
 
-    ```bash
-    celery -A leadsmanager worker --loglevel=info
-    ```
-
-6. **Run Celery beat (optional for periodic tasks):**
-
-    ```bash
-    celery -A leadsmanager beat --loglevel=info
-    ```
-
-## Usage
-
-### Access the Admin Panel:
-Once your development server is up and running, you can access the admin panel:
-
-- URL: `http://localhost:8000/admin`
-- Use the superuser credentials created during setup.
-
-### Test Lead Submission:
-To test lead submissions, you can go to:
-
-- URL: `http://localhost:8000/forms/`
-
-You can manually submit forms here, and leads will be processed and stored in the database.
-
-## 🚀 Planned Features / Roadmap
+## Planned Features and Roadmap
 
 Below are some of the upcoming features and improvements planned for the project. Contributions and feedback are welcome!
 
 - **FastAPI microservice for database access**  
-  Transition the current Celery implementation to a lighter FastAPI service for handling database queries, improving speed and scalability.
+  Transition the current Celery planned implementation to a lighter FastAPI asynchronous microservice for handling systematic database queries, improving speed and scalability.
 
 - **CI/CD Pipeline**  
-  Implement GitLab CI/CD (or GitHub Actions) to automate the deployment process, allowing for seamless versioning and deployment to Google Cloud Run.
+  Implement GitHub Actions CI/CD to automate the deployment process, allowing for seamless versioning and deployment to Google Cloud Run (via artifact registry).
 
-- **Leads advancement analysis**  
-  The updates on each lead are already being logged. leads config behavior and commercial team members performance will be analyzed for upper management reporting.
+- **Leads advancement/behavior analysis**  
+  The updates on each lead are already being logged, lead configurations and commercial team member performance will be analyzed for insights.
 
 - **Enhanced Lead Management with AI**  
   Integrate a machine learning model to provide lead prioritization based on historical data, enabling more efficient resource allocation.
@@ -142,14 +191,15 @@ Below are some of the upcoming features and improvements planned for the project
 - **Automated Alerts**  
   Set up email and Slack notifications for lead status changes, submission errors, and other important events. API mail services already configured and waiting for mkt and commercial team feedback on mapped events for notifications.
 
-- **GraphQL API**  
-  Add a GraphQL API alongside the current REST API to provide more flexible queries for frontend applications.
-
 - **Multi-language Support**  
   Enable multi-language support for international users, starting with Spanish and English.
 
 - **Performance Optimization**  
   Optimize database queries, reduce memory footprint, and enhance the overall speed of the web application, as routine continuous development.
+
+- **public API for data fetching**  
+  Generate a public API for main data fetching like submissions, users matirx and their respective log activity and analysis results
+
 
 ---
 
@@ -157,21 +207,16 @@ Feel free to suggest any other features by opening an issue!
 
 ## Contributing
 
-We welcome contributions to improve LeadsManager! To get started, please follow these steps:
+Contributions are welcome! Please follow these steps:
 
-1. Fork the repository and create your feature branch:
+1. Fork the repository.
+2. Create a new branch:
+```
+bash
+git checkout -b feature/your-feature-name
+```
+3. Commit changes and submit a pull request.
 
-    ```bash
-    git checkout -b feature/your-feature-name
-    ```
+## License
 
-2. Make your changes and ensure all tests pass.
-3. Push your feature branch:
-
-    ```bash
-    git push origin feature/your-feature-name
-    ```
-
-4. Create a Pull Request.
-
-For more detailed guidelines, please refer to [contributing.md](docs/contributing.md).
+This project is licensed under the MIT License. See LICENSE for details.
