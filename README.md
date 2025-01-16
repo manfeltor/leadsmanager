@@ -51,15 +51,15 @@ This document outlines the structure, features, and usage of the application, fo
 
 ## Project Structure
 leadsmanager/
-├── landingapp/ # Homepage and general views
-├── usersapp/ # User authentication and management
-├── formsapp/ # Form submissions and lead management
-├── static/ # Static assets (CSS, JS, images)
-├── templates/ # HTML templates
-├── manage.py # Django management commands entry point
-├── requirements.txt # Python dependencies
-├── docs/ # specific technical documentation about the apps, worflows, main features and db schema
-└── README.md # Project documentation
+    ├── landingapp/ # Homepage and general views
+    ├── usersapp/ # User authentication and management
+    ├── formsapp/ # Form submissions and lead management
+    ├── static/ # Static assets (CSS, JS, images)
+    ├── templates/ # HTML templates
+    ├── manage.py # Django management commands entry point
+    ├── requirements.txt # Python dependencies
+    ├── docs/ # specific technical documentation about the apps, workflows, main features and db schema
+    └── README.md # Project documentation
 
 ---
 
