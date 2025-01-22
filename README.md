@@ -50,6 +50,8 @@ This document outlines the structure, features, and usage of the application, fo
 ---
 
 ## Project Structure
+```
+   bash
 leadsmanager/
     ├── landingapp/ # Homepage and general views
     ├── usersapp/ # User authentication and management
@@ -60,6 +62,7 @@ leadsmanager/
     ├── requirements.txt # Python dependencies
     ├── docs/ # specific technical documentation about the apps, workflows, main features and db schema
     └── README.md # Project documentation
+```
 
 ---
 
@@ -216,6 +219,8 @@ bash
 git checkout -b feature/your-feature-name
 ```
 3. Commit changes and submit a pull request.
+
+---
 
 ## License
 
