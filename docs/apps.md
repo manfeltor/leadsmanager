@@ -340,23 +340,23 @@ The FormsApp is a critical component of the LeadsManager project. It focuses on 
 ### Key Functionalities
 
 **Form Submission Management:**
-- Fetch new submissions via external APIs.
-- Manual addition of submissions.
-- Update submission details, including lead status and assigned users.
+-Fetch new submissions via external APIs.
+-Manual addition of submissions.
+-Update submission details, including lead status and assigned users.
 
 **Filtering and Searching:**
-- Filter leads by status, creation date, and assigned user.
-- Search and sort leads for quick access.
+-Filter leads by status, creation date, and assigned user.
+-Search and sort leads for quick access.
 
 **Lead History Tracking:**
-- Automatically logs changes in lead statuses.
+-Automatically logs changes in lead statuses.
 
 **Bulk Data Operations:**
-- Import lead updates from Excel files.
-- Export lead data for offline analysis.
+-Import lead updates from Excel files.
+-Export lead data for offline analysis.
 
 **Role-Based Access Control:**
-- Role restrictions for sensitive operations (e.g., status updates).
+-Role restrictions for sensitive operations (e.g., status updates).
 
 ---
 
@@ -458,63 +458,63 @@ Handles the uploading of Excel files for bulk lead updates.
 ***Key Views:***
 
 **Form List (forms_list_view):**
-- URL: /forms/list/
-- Displays all forms with filtering options.
+-URL: /forms/list/
+-Displays all forms with filtering options.
 
 **User Leads (user_leads_view):**
-- URL: /forms/my_leads/
-- Displays leads assigned to the logged-in user.
+-URL: /forms/my_leads/
+-Displays leads assigned to the logged-in user.
 
 **Form Detail (form_detail_view):**
-- URL: /forms/detail/<submission_id>/
-- Shows detailed information about a specific lead.
+-URL: /forms/detail/<submission_id>/
+-Shows detailed information about a specific lead.
 
 **Form Edit (form_edit_view):**
-- URL: /forms/edit/<submission_id>/
-- Allows management to update submission details.
+-URL: /forms/edit/<submission_id>/
+-Allows management to update submission details.
 
 **Fetch Submissions (fetch_new_submissions_view):**
-- URL: /forms/fetch-submissions/
-- Fetches new submissions from external APIs.
+-URL: /forms/fetch-submissions/
+-Fetches new submissions from external APIs.
 
 **Update Submissions (update_submissions_from_excel):**
-- URL: /forms/update-submissions/
-- Updates lead statuses in bulk using an Excel file.
+-URL: /forms/update-submissions/
+-Updates lead statuses in bulk using an Excel file.
 
 ---
 
 ### Templates
 
 Key templates used for the FormsApp:
-- list_forms_submissions.html: Displays the list of forms with filtering options.
-- user_leads_list.html: Shows leads assigned to the logged-in user.
-- form_detail.html: Detailed view of a specific submission.
-- form_edit.html: Form for editing submission details.
-- manual_form_submission.html: Manual form submission page.
+-list_forms_submissions.html: Displays the list of forms with filtering options.
+-user_leads_list.html: Shows leads assigned to the logged-in user.
+-form_detail.html: Detailed view of a specific submission.
+-form_edit.html: Form for editing submission details.
+-manual_form_submission.html: Manual form submission page.
 
 ---
 
 ### Management Commands
 
 **update_forms:**
-- Fetches new form submissions from external APIs.
-- Usage: python manage.py update_forms
+-Fetches new form submissions from external APIs.
+-Usage: python manage.py update_forms
 
 **update_estado_from_excel:**
-- Updates lead statuses from an Excel file.
-- Usage: python manage.py update_estado_from_excel <path_to_file>
+-Updates lead statuses from an Excel file.
+-Usage: python manage.py update_estado_from_excel <path_to_file>
 
 **export_formsubmission_data:**
-- Exports all form submission data to an Excel file.
-- Usage: python manage.py export_formsubmission_data
+-Exports all form submission data to an Excel file.
+-Usage: python manage.py export_formsubmission_data
 
 **clear_formsubmission:**
-- Deletes all form submissions from the database.
-- Usage: python manage.py clear_formsubmission
+-Deletes all form submissions from the database.
+-Usage: python manage.py clear_formsubmission
 
 **clear_forms_stat_history:**
-- Deletes all lead status history records.
-- Usage: python manage.py clear_forms_stat_history
+-Deletes all lead status history records.
+-Usage: python manage.py clear_forms_stat_history
 
 ---
 
@@ -524,9 +524,9 @@ The FormsApp integrates with external APIs to fetch form submissions. The fetche
 
 Key external API credentials and URLs are managed via environment variables:
 
-- WPCUSTOMAPISUBM: Base URL for API calls.
-- WPUSER: API username.
-- WPPASS: API password.
+-WPCUSTOMAPISUBM: Base URL for API calls.
+-WPUSER: API username.
+-WPPASS: API password.
 
 ---
 
@@ -534,11 +534,11 @@ Key external API credentials and URLs are managed via environment variables:
 The FormsApp implements role-based access control to ensure data integrity and security:
 
 **Admins and Managers:**
-- Can view, edit, and update any form submission.
-- Access bulk update and export features.
+-Can view, edit, and update any form submission.
+-Access bulk update and export features.
 
 **Employees:**
-- Restricted to leads assigned to them.
-- Can only view and update their assigned leads.
+-Restricted to leads assigned to them.
+-Can only view and update their assigned leads.
 
 ---
