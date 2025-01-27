@@ -59,11 +59,11 @@ def base(req):
 
     for lead in leads_count:
         state = lead['estado']
-        if state in ['pendiente', 'asignado', 'contactado', 'pospuesto']:
+        if state in ['esperandoDatos', 'faltaCotizar']:
             cold_count += lead['count']
-        elif state in ['faltaCotizar', 'cotizado', 'interesadoAvanzar', 'gestionExitosa']:
+        elif state in ['cotizado', 'avanzando']:
             active_count += lead['count']
-        elif state in ['noAvanzo', 'noViable', 'nuevoCliente', 'negativo']:
+        elif state in ['noAvanzo', 'noViable', 'nuevoCliente']: #TODO poner NUEVO CLINETE EN OTRA CATEGORIA
             closed_count += lead['count']
 
     # Calculate percentages for group2 categories

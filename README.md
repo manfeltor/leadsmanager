@@ -180,7 +180,7 @@ The **Perfit mail functionality** is a secondary feature added to support the op
 Below are some of the upcoming features and improvements planned for the project. Contributions and feedback are welcome!
 
 - **FastAPI microservice for database access**  
-  Transition the current Celery planned implementation to a lighter FastAPI asynchronous microservice for handling systematic database queries, improving speed and scalability.
+  Transition the current Celery planned implementation to a lighter FastAPI asynchronous microservice for handling systematic database population, improving speed and scalability.
 
 - **CI/CD Pipeline**  
   Implement GitHub Actions CI/CD to automate the deployment process, allowing for seamless versioning and deployment to Google Cloud Run (via artifact registry).
@@ -203,6 +203,8 @@ Below are some of the upcoming features and improvements planned for the project
 - **public API for data fetching**  
   Generate a public API for main data fetching like submissions, users matirx and their respective log activity and analysis results
 
+- **Frontend Design Enhancement**  
+  Upgrade the frontend framework to a more modern and visually appealing technology, improving both user experience and aesthetic quality.
 
 ---
 

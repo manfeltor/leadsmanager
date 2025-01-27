@@ -3,19 +3,20 @@ from usersapp.models import CustomUser
 from django.contrib.auth import get_user_model
 
 ESTADO_CHOICES = [
-    ('pendiente', 'Pendiente'),
-    ('asignado', 'Asignado'),
-    ('contactado', 'Contactado'),
+    #TODO en exportacion y renderizacion, mostrar estadons con mumero de orden, el que esta en esta matriz
+    ('esperandoDatos', 'Esperando datos'), # estado default
+    # ('asignado', 'Asignado'), # estado deprecado
+    # ('contactado', 'Contactado'), deprecado
     ('faltaCotizar', 'Falta cotizar'),
     ('cotizado', 'Cotizado'),
-    ('interesadoAvanzar', 'Interesados en avanzar'),
-    ('gestionExitosa', 'Gestion exitosa'),
-    ('pospuesto', 'pospuesto'),
+    ('avanzando', 'Avanzando'),
+    # ('gestionExitosa', 'Gestion exitosa'), deprecado
+    # ('pospuesto', 'pospuesto'), deprecado
     ('noAvanzo', 'No avanzo'),
     ('noViable', 'No viable'),
     ('nuevoCliente', 'Nuevo cliente'),
     ('negativo', 'Negativo'),
-    ('noDefinido', 'No definido'),
+    # ('noDefinido', 'No definido'), deprecado
 ]
 
 class Campaign(models.Model):
