@@ -245,4 +245,4 @@ def fetch_new_submissions_view(request):
     form_submissions = [FormSubmission(**data) for data in all_data]
     FormSubmission.objects.bulk_create(form_submissions, ignore_conflicts=True)
 
-    return HttpResponse("New submissions fetched successfully.")
+    return HttpResponse("Base de formularios actualizada, por favor refresca la pagina para ver los cambios.")

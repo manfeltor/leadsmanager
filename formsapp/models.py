@@ -3,19 +3,18 @@ from usersapp.models import CustomUser
 from django.contrib.auth import get_user_model
 
 ESTADO_CHOICES = [
-    #TODO en exportacion y renderizacion, mostrar estadons con mumero de orden, el que esta en esta matriz
-    ('esperandoDatos', 'Esperando datos'), # estado default
+    ('esperandoDatos', '1) Esperando datos'), # estado default
     # ('asignado', 'Asignado'), # estado deprecado
     # ('contactado', 'Contactado'), deprecado
-    ('faltaCotizar', 'Falta cotizar'),
-    ('cotizado', 'Cotizado'),
-    ('avanzando', 'Avanzando'),
+    ('faltaCotizar', '2) Falta cotizar'),
+    ('cotizado', '3) Cotizado'),
+    ('avanzando', '4) Avanzando'),
     # ('gestionExitosa', 'Gestion exitosa'), deprecado
     # ('pospuesto', 'pospuesto'), deprecado
-    ('noAvanzo', 'No avanzo'),
-    ('noViable', 'No viable'),
-    ('nuevoCliente', 'Nuevo cliente'),
-    ('negativo', 'Negativo'),
+    ('noAvanzo', '5) No avanzo'),
+    ('noViable', '6) No viable'),
+    ('nuevoCliente', '7) Nuevo cliente'),
+    ('negativo', '8) Negativo'),
     # ('noDefinido', 'No definido'), deprecado
 ]
 

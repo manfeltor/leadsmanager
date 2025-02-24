@@ -143,21 +143,31 @@
             <table class="w3-table w3-bordered w3-striped w3-hoverable">
                 <thead>
                     <tr class="w3-light-grey">
-                        <th>Submission ID</th>
+                        <!-- <th>Submission ID</th> -->
                         <th>Razón Social</th>
                         <th>Nombre y Apellido</th>
+                        <!-- <th>Fecha creacion</th> -->
+                        <th>
+                            <a href="?sort=fecha_creacion&dir={{ next_direction }}">
+                                Fecha Creación {% if current_sort == "fecha_creacion" %}({{ current_direction }}){% endif %}
+                            </a>
+                        </th>
                         <th>Servicio</th>
-                        <th>Usuario asignado</th>
+                        <th>Estado</th>
+                        <!-- <th>Usuario asignado</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for form in forms %}
                     <tr data-href="{% url 'form_detail' form.submission_id %}" style="cursor:pointer;">
-                        <td>{{ form.submission_id }}</td>
+                        <!-- <td>{{ form.submission_id }}</td> -->
                         <td>{{ form.razon_social }}</td>
                         <td>{{ form.nombre_y_apellido }}</td>
+                        <!-- <td>{{ form.fecha_creacion }}</td> -->
+                        <td>{{ form.fecha_creacion|date:"d/m/y" }}</td>
                         <td>{{ form.servicio }}</td>
-                        <td>{{ form.servicio }}</td>
+                        <td>{{ form.get_estado_display }}</td>
+                        <!-- <td>{{ form.servicio }}</td> -->
                     </tr>
                     {% endfor %}
                 </tbody>

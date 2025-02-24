@@ -27,7 +27,7 @@ class FormSubmissionEditForm(forms.ModelForm):
             'estado', 'assigned_user', 'management_message'
         ]
 
-    servicio = forms.ChoiceField(choices=SERVICIO_CHOICES, required=False)
+    servicio = forms.ChoiceField(choices=SERVICIO_CHOICES, required=True)
 
 
 class ManualFormSubmissionForm(forms.ModelForm):
