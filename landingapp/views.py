@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from formsapp.models import FormSubmission
+from formsapp.models import FormSubmission, ESTADO_CHOICES
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Count, Q
@@ -12,82 +12,37 @@ import json
 from django.contrib.auth.decorators import login_required
 
 def base(req):
-
     days_period = 60
     date_threshold = timezone.now() - timedelta(days=days_period)
 
+    valid_estados = [estado[0] for estado in ESTADO_CHOICES]
+
     # Get the filtered leads
-    leads = FormSubmission.objects.filter(fecha_creacion__gte=date_threshold)
+    leads = FormSubmission.objects.filter(fecha_creacion__gte=date_threshold, estado__in=valid_estados)
 
-    group1_mapping = {
-        'pendiente': 'Contacto inicial',
-        'asignado': 'Contacto inicial',
-        'contactado': 'Inicializados',
-        'faltaCotizar': 'Inicializados',
-        'cotizado': 'Inicializados',
-        'interesadoAvanzar': 'Leads activos',
-        'gestionExitosa': 'Leads activos',
-        'pospuesto': 'Hold',
-        'noAvanzo': 'Inactivos',
-        'noViable': 'Inactivos',
-        'nuevoCliente': 'Conversion',
-        'negativo': 'Inactivos',
-    }
-
-    # Initialize counts for each group1 category
-    group1_counts = {category: 0 for category in set(group1_mapping.values())}
-
-    # Group the leads by 'estado' and count them
-    leads_count = leads.values('estado').annotate(count=Count('id'))
-
+    # Count total leads
     total_leads = leads.count()
 
-    for lead in leads_count:
-        estado = lead['estado']
-        group1 = group1_mapping.get(estado)
-        if group1:
-            group1_counts[group1] += lead['count']
+    # Count occurrences of each "estado"
+    estado_counts = leads.values('estado').annotate(count=Count('id'))
 
-    # Calculate percentages for group1
-    group1_percentages = {
-        category: round((count / total_leads) * 100 if total_leads > 0 else 0, 2)
-        for category, count in group1_counts.items()
+    # Calculate percentage per estado
+    estado_percentages = {
+        estado['estado']: round((estado['count'] / total_leads) * 100, 2) if total_leads > 0 else 0
+        for estado in estado_counts
     }
 
-    # Initialize counts for each group2 category
-    cold_count = active_count = closed_count = 0
+    # Convert `ESTADO_CHOICES` into a dictionary for easier lookups
+    estado_labels = dict(ESTADO_CHOICES)
 
-    for lead in leads_count:
-        state = lead['estado']
-        if state in ['esperandoDatos', 'faltaCotizar']:
-            cold_count += lead['count']
-        elif state in ['cotizado', 'avanzando']:
-            active_count += lead['count']
-        elif state in ['noAvanzo', 'noViable', 'nuevoCliente']: #TODO poner NUEVO CLINETE EN OTRA CATEGORIA
-            closed_count += lead['count']
+    # Map percentages to human-readable labels
+    estado_display_percentages = {
+        estado_labels[estado]: percentage for estado, percentage in estado_percentages.items()
+    }
 
-    # Calculate percentages for group2 categories
-    cold_percentage = round((cold_count / total_leads) * 100 if total_leads > 0 else 0, 2)
-    active_percentage = round((active_count / total_leads) * 100 if total_leads > 0 else 0, 2)
-    closed_percentage = round((closed_count / total_leads) * 100 if total_leads > 0 else 0, 2)
-
-    total_submissions = FormSubmission.objects.count()
-    pending_submissions = FormSubmission.objects.filter(estado='pendiente').count()
-    contacted_submissions = FormSubmission.objects.filter(estado__in=['faltaCotizar', 'cotizado']).count()
-    active_submissions = FormSubmission.objects.filter(estado__in=['gestionExitosa', 'pospuesto', 'interezadoAvanzar']).count()
-    recent_submissions = FormSubmission.objects.exclude(estado='negativo').order_by('-fecha_creacion')[:5]
-    
     context = {
-        'total_submissions': total_submissions,
-        'pending_submissions': pending_submissions,
-        'contacted_submissions': contacted_submissions,
-        'active_submissions': active_submissions,
-        'recent_submissions': recent_submissions,
-        'cold_percentage': cold_percentage,
-        'active_percentage': active_percentage,
-        'closed_percentage': closed_percentage,
+        'estado_percentages': estado_display_percentages,
         'days_period': days_period,
-        'group1_percentages': group1_percentages,
     }
     
     return render(req, "landing.html", context=context)

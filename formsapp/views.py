@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import FormSubmission, CustomUser, ESTADO_CHOICES
 from .forms import FormSubmissionEditForm, ManualFormSubmissionForm, UploadExcelForm
 from django.utils.dateparse import parse_date
+from django.utils.timezone import localtime
 from django.db.models import Max
 from django.utils import timezone
 import pandas as pd
@@ -16,30 +17,34 @@ import logging
 
 @login_required
 def forms_list_view(request):
-    # Start with all forms
     forms = FormSubmission.objects.all().order_by('-submission_id')
 
-    # Get filter parameters from the request
+    # Filters
     assigned_user_id = request.GET.get('assigned_user')
     estado = request.GET.get('estado')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
-    # Filter by assigned user if provided
     if assigned_user_id:
         forms = forms.filter(assigned_user_id=assigned_user_id)
-
-    # Filter by estado if provided
     if estado:
         forms = forms.filter(estado=estado)
-
-    # Filter by date range if provided
     if start_date:
         forms = forms.filter(fecha_creacion__gte=start_date)
     if end_date:
         forms = forms.filter(fecha_creacion__lte=end_date)
 
-    # Get all users and estados for the dropdowns
+    # Sorting logic
+    sort_field = request.GET.get('sort', 'fecha_creacion')  # Default sort by date
+    sort_direction = request.GET.get('dir', 'desc')  # Default descending
+
+    if sort_field in ['estado', 'fecha_creacion']:  
+        sort_prefix = '' if sort_direction == 'asc' else '-'  # Ascending or Descending
+        forms = forms.order_by(f"{sort_prefix}{sort_field}")
+
+    # Toggle sorting direction for UI
+    next_direction = 'asc' if sort_direction == 'desc' else 'desc'
+
     users = CustomUser.objects.all()
     estados = FormSubmission._meta.get_field('estado').choices
 
@@ -47,7 +52,46 @@ def forms_list_view(request):
         'forms': forms,
         'users': users,
         'estados': estados,
+        'current_sort': sort_field,
+        'current_direction': sort_direction,
+        'next_direction': next_direction
     })
+
+@login_required
+def download_forms_excel(request):
+    # Fetch data
+    forms = FormSubmission.objects.all()
+
+    # Define the required column structure
+    data = []
+    for form in forms:
+        data.append({
+            "Cod Periodo": form.fecha_creacion.strftime("%m/%Y"),
+            "Fecha": form.fecha_creacion.strftime("%d/%m/%Y"),
+            "Cliente": form.razon_social,
+            "Servicio": form.servicio,
+            "Mail": form.mail,
+            "Telefono": form.telefono,
+            "Origen": form.origen,
+            "Sub-Origen": form.sub_origen,
+            "Datos importantes informados por cliente": form.mensaje,
+            "Responsable": form.assigned_user,
+            "Avance": "-",
+            "Estado": form.get_estado_display(),
+            "Comentarios / Avances /  Notas": "-",
+        })
+
+    # Convert to DataFrame
+    df = pd.DataFrame(data)
+
+    # Create Excel file in-memory
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="leads_export.xlsx"'
+    
+    with pd.ExcelWriter(response, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name="Leads")
+
+    return response
 
 @login_required
 def user_leads_view(request):

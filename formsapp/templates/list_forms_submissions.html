@@ -119,7 +119,11 @@
         {% if request.user.is_management %}
         <!-- "Actualizar Estados" Button -->
         <button onclick="document.getElementById('uploadModal').style.display='block'"
-            class="w3-button w3-green">Actualizar Estados</button>
+            class="w3-button w3-yellow">Actualizar Estados</button>
+
+        <form action="{% url 'download_forms_excel' %}" method="GET" style="padding-top: 5px;">
+            <button type="submit" class="w3-button w3-green">📥 Descargar Excel</button>
+        </form>
 
         <!-- Modal for File Upload -->
         <div id="uploadModal" class="w3-modal">
@@ -153,7 +157,11 @@
                             </a>
                         </th>
                         <th>Servicio</th>
-                        <th>Estado</th>
+                        <th>
+                            <a href="?sort=estado&dir={{ next_direction }}">
+                                Estado {% if current_sort == "estado" %}({{ current_direction }}){% endif %}
+                            </a>
+                        </th>
                         <!-- <th>Usuario asignado</th> -->
                     </tr>
                 </thead>

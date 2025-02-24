@@ -247,29 +247,17 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     </div>
   </div> -->
   <hr>
-<div class="w3-container">
-    <h5>Estadísticas agrupadores generales (últimos {{ days_period }} días)</h5>
-    
-    <p>Frios</p>
-    <div class="w3-grey">
-        <div class="w3-container w3-center w3-padding w3-green" style="width:{{ cold_percentage }}%">
-            {{ cold_percentage }}%
-        </div>
-    </div>
+  <div class="w3-container">
+    <h5>Distribución por Estado (últimos {{ days_period }} días)</h5>
 
-    <p>Activos</p>
-    <div class="w3-grey">
-        <div class="w3-container w3-center w3-padding w3-orange" style="width:{{ active_percentage }}%">
-            {{ active_percentage }}%
+    {% for estado, percentage in estado_percentages.items %}
+        <p>{{ estado }}</p>
+        <div class="w3-grey">
+            <div class="w3-container w3-center w3-padding w3-blue" style="width:{{ percentage }}%">
+                {{ percentage }}%
+            </div>
         </div>
-    </div>
-
-    <p>Cerrados</p>
-    <div class="w3-grey">
-        <div class="w3-container w3-center w3-padding w3-red" style="width:{{ closed_percentage }}%">
-            {{ closed_percentage }}%
-        </div>
-    </div>
+    {% endfor %}
 </div>
 <hr>
 
