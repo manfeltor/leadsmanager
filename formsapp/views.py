@@ -17,7 +17,7 @@ import logging
 
 @login_required
 def forms_list_view(request):
-    forms = FormSubmission.objects.all().order_by('-submission_id')
+    forms = FormSubmission.objects.exclude(estado="negativo").order_by('-submission_id')
 
     # Filters
     assigned_user_id = request.GET.get('assigned_user')
@@ -226,27 +226,36 @@ def update_submissions_from_excel(request):
             df = pd.read_excel(excel_file)
 
             # Ensure the required columns exist in the Excel file
-            if 'mail' not in df.columns or 'estado' not in df.columns or 'cliente' not in df.columns:
-                messages.error(request, "El archivo Excel debe contener las columnas 'mail', 'estado' y 'cliente'.")
+            if 'Mail' not in df.columns or 'Estado' not in df.columns or 'Cliente' not in df.columns:
+                messages.error(request, "El archivo Excel debe contener las columnas 'Mail', 'Estado' y 'Cliente'.")
                 return redirect('forms_list')
+            
+            estado_dict = {label: value for value, label in ESTADO_CHOICES}
+            if df["Estado"].isin(estado_dict.keys()).all():
+                # Convert human-readable values to machine values
+                df["Estado"] = df["Estado"].map(estado_dict)
 
             # Iterate over FormSubmission objects to update them
             updated_count = 0
             for submission in FormSubmission.objects.exclude(estado='negativo'):
-                matched_row = df[df['mail'] == submission.mail]
+                matched_row = df[df['Mail'] == submission.mail]
 
                 if matched_row.empty:
-                    matched_row = df[df['cliente'] == submission.razon_social]
+                    matched_row = df[df['Cliente'] == submission.razon_social]
 
                 if matched_row.empty:
                     pass
                 else:
-                    submission.estado = matched_row['estado'].values[0]
+                    submission.estado = matched_row['Estado'].values[0]
 
                 submission.save()
                 updated_count += 1
+            
+            not_updated_count = len(df.index) - updated_count
 
             messages.success(request, f"{updated_count} registros actualizados con éxito.")
+            if not_updated_count != 0:
+                messages.warning(request, f"{not_updated_count} registros no se pudieron actualizar.")
             return redirect('forms_list')
     else:
         form = UploadExcelForm()

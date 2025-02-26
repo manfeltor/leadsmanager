@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 def base(req):
     days_period = 60
     date_threshold = timezone.now() - timedelta(days=days_period)
-
+    
     valid_estados = [estado[0] for estado in ESTADO_CHOICES]
 
     # Get the filtered leads
