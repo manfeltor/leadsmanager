@@ -37,9 +37,9 @@ def determine_avance_estado(servicio, form_id):
         if servicio == "Busco trabajo/ Ofrezco productos o servicios":
             return "▓", "negativo"
         else:
-            return "⊕", "pendiente"
+            return "⊕", "esperandoDatos"
     else:
-        return "⊕", "pendiente"
+        return "⊕", "esperandoDatos"
 
 def normalize_submission(submission, form_id):
     servicio = submission.get('Me interesa el servicio' if form_id in [3, 4, 5] else 'Ubicación')
