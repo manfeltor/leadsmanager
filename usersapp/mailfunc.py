@@ -50,7 +50,14 @@ def automails(clean_df: pd.DataFrame):
             "from": {"email": "notificaciones@intralog.com.ar"},
             "subject": subject,
             "content": {"html": content},
-            "recipients": [{"to": {"email": "atclientepaq.ar@correoargentino.com.ar"}}]
+            "recipients": [
+            {
+                "to": {"email": "atclientepaq.ar@correoargentino.com.ar"},
+                "cc": [
+                {"email": "cmontenegro@intralog.com.ar"},
+                ]
+            }
+        ]
         }
         response = requests.post(url, headers=headers, json=data)
         if response.status_code == 202:
