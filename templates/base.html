@@ -84,7 +84,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     <a href="{% url 'forms_list' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>Listado leads</a>
     <a href="{% url 'user_leads' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>Mis leads</a>
     <a href="{% url 'manual_form_submission' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-plus-square fa-fw"></i>Carga lead manual</a>
-    <a href="{% url 'functions' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-plus-square fa-fw"></i>Funciones especiales</a>
+    <a href="{% url 'functions' %}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cogs fa-fw"></i>Funciones especiales</a>
     <!-- <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i> campo5</a> -->
     <!-- <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i> campo7</a> -->
     <!-- <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i> campo8</a><br><br> -->
@@ -272,7 +272,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 <hr>
 
 <div class="w3-container">
-    <h5>categorias generales</h5>
+    <h5>Categorías Generales</h5>
     <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
         {% for category, percentage in group1_percentages.items %}
         <tr>
@@ -308,8 +308,10 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     <h5>Entradas Recientes</h5>
     {% for submission in recent_submissions %}
     <div class="w3-row">
-        <div class="w3-col m2 text-center">
-            <img class="w3-circle" src="/w3images/avatar{{ forloop.counter }}.png" style="width:96px;height:96px">
+        <div class="w3-col m2 w3-center">
+            <div class="w3-circle w3-blue-grey" style="width:64px;height:64px;line-height:64px;font-size:24px;font-weight:bold;display:inline-flex;align-items:center;justify-content:center;color:#fff;">
+                {{ submission.razon_social|first|upper }}
+            </div>
         </div>
         <div class="w3-col m10 w3-container">
             <h4>{{ submission.razon_social }} <span class="w3-opacity w3-medium">{{ submission.fecha_creacion|date:"M d, Y, h:i A" }}</span></h4>
@@ -318,37 +320,18 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     </div>
     {% endfor %}
   </div>
-  <br>
-  <div class="w3-container w3-dark-grey w3-padding-32">
+  <footer class="w3-container w3-padding-16 w3-dark-grey w3-text-white">
     <div class="w3-row">
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-green">Demographic</h5>
-        <p>Language</p>
-        <p>Country</p>
-        <p>City</p>
+      <div class="w3-half">
+        <p><i class="fa fa-bullseye"></i> <strong>LeadsManager</strong></p>
+        <p style="font-size:12px;color:#ccc;">Herramienta de gestión y seguimiento de leads comerciales.</p>
       </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-red">System</h5>
-        <p>Browser</p>
-        <p>OS</p>
-        <p>More</p>
-      </div>
-      <div class="w3-container w3-third">
-        <h5 class="w3-bottombar w3-border-orange">Target</h5>
-        <p>Users</p>
-        <p>Active</p>
-        <p>Geo</p>
-        <p>Interests</p>
+      <div class="w3-half w3-right-align">
+        <p style="font-size:12px;color:#ccc;">Desarrollado por <strong>Felipe Torres</strong> &middot; {% now "Y" %}</p>
+        <p style="font-size:12px;color:#ccc;">Interfaz: <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-text-light-grey">w3.css</a></p>
       </div>
     </div>
-  </div>
-
- <!-- Footer -->
- <footer class="w3-container w3-padding-16 w3-light-grey">
-  <h4>FOOTER</h4>
-  <p>Design <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  <p>Powered by <a href=# target="_blank">Felipe Torres</a></p>
-</footer>
+  </footer>
 
 <!-- End page content -->
 </div>
