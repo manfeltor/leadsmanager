@@ -8,6 +8,8 @@ from .forms import CustomUserCreationForm, UserProfileUpdateForm, CustomPassword
 from .forms import UserEditForm
 from django.contrib.auth import update_session_auth_hash
 from .mailfunc import main_func
+from django.conf import settings
+from django.core.management import call_command
 
 def login_view(request):
     if request.method == 'POST':
@@ -120,6 +122,22 @@ def delete_user(request, user_id):
 def functions_view(request):
 
     return render(request, 'functions.html')
+
+
+@login_required
+def populate_demo_view(request):
+    if not settings.DEMO_MODE:
+        return redirect('functions')
+    if not request.user.is_superuser:
+        return redirect('unauthorized')
+    if request.method == 'POST':
+        try:
+            call_command('populate_demo_data')
+            messages.success(request, 'Datos demo cargados correctamente.')
+        except Exception as e:
+            messages.error(request, f'Error al cargar datos demo: {e}')
+        return redirect('functions')
+    return redirect('functions')
 
 
 @login_required

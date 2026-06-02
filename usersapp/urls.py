@@ -2,7 +2,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from .views import login_view, user_list_view, create_user_view, unauthorized_view, update_profile_view
 from .views import profile_detail_view, change_password_view, user_edit_view, delete_user, functions_view
-from .views import send_mail_view
+from .views import send_mail_view, populate_demo_view
 from .mailfunc import main_func
 
 urlpatterns = [
@@ -13,10 +13,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('create_user/', create_user_view, name='create_user'),
     path('unauthorized/', unauthorized_view , name='unauthorized'),
-    path('unauthorized/', unauthorized_view , name='unauthorized'),
     path('updateprofile/', update_profile_view, name='update_profile'),
     path('profile/', profile_detail_view, name='profile'),
     path('profile/change_password/', change_password_view, name='change_password'),
     path('usersfuncs/', functions_view, name='functions'),
     path('usersfuncs/reclamosmailcorreoarg/', send_mail_view, name='mails_reclamos'),
+    path('usersfuncs/populate-demo/', populate_demo_view, name='populate_demo'),
 ]

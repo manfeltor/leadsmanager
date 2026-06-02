@@ -128,7 +128,6 @@ def category_breakdown_view(request):
     # Generate bar plots for each group1 category
     plot_data = {}
     for group1, data in group1_percentages.items():
-        print(str(len(data)) + f"{group1}")
         df = pd.DataFrame(list(data.items()), columns=['subcategoria', 'percentage'])
         plot_data[group1] = interactive_bar_plot(df, 'subcategoria', 'percentage', f'Desglose {group1}', yaxis_title='porcentaje')
 

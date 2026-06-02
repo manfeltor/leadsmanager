@@ -48,6 +48,16 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </div>
 {% endblock %}
 
+{% if DEMO_MODE %}
+<div style="position:fixed;top:46px;left:0;right:0;z-index:5;background:#e65100;color:#fff;text-align:center;padding:5px 0;font-weight:bold;font-size:13px;letter-spacing:1px;">
+  MODO DEMO &mdash; Los datos mostrados son ficticios
+</div>
+<style>
+  .w3-main { margin-top: 90px !important; }
+  .w3-sidebar { padding-top: 28px; }
+</style>
+{% endif %}
+
 <!-- Sidebar/menu -->
 {% block Sidebar_menu %}
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>

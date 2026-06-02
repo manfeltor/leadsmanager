@@ -12,8 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-from .authvars import DB_NAME, DB_USR, DB_PASS, DB_HOST, DB_PORT, SECRET_KEY
-from celery.schedules import crontab
+from .authvars import DB_NAME, DB_USR, DB_PASS, DB_HOST, DB_PORT, SECRET_KEY, DEMO_MODE, DEBUG
+# from celery.schedules import crontab
 from datetime import timedelta
 
 
@@ -26,13 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECRET_KEY
+DEMO_MODE = DEMO_MODE
 
 CSRF_TRUSTED_ORIGINS = [
     'https://leadsmanager-web-722153627867.us-central1.run.app'
 ]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DEBUG
 CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
 SESSION_COOKIE_SECURE = True  # Ensures session cookies are only sent over HTTPS
 
@@ -96,6 +97,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'leadsmanager.context_processors.demo_mode',
             ],
         },
     },
@@ -122,12 +124,12 @@ DATABASES = {
 # Database config for local testing, tinker with your local config
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',  # MySQL database engine
-#         'NAME': 'leadslocaldb',          # Name of your MySQL database
-#         'USER': 'root',         # MySQL username
-#         'PASSWORD': 'Sussini.1341',     # MySQL password
-#         'HOST': 'localhost',                   # Usually localhost if it's on the same server
-#         'PORT': '3306',                        # Default MySQL port (can be left empty if default)
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'leadslocaldb',
+#         'USER': 'root',
+#         'PASSWORD': os.environ.get('DB_PASS'),
+#         'HOST': 'localhost',
+#         'PORT': '3306',
 #     }
 # }
 
@@ -189,12 +191,12 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
-CELERY_BEAT_SCHEDULE = {
-    'fetch-form-submissions-every-60-minutes': {
-        'task': 'formsapp.tasks.fetch_new_submissions',
-        'schedule': crontab(minute='*/60'),
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     'fetch-form-submissions-every-60-minutes': {
+#         'task': 'formsapp.tasks.fetch_new_submissions',
+#         'schedule': crontab(minute='*/60'),
+#     },
+# }
 
 LOGGING = {
     'version': 1,
