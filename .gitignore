@@ -1,4 +1,29 @@
+# Env / secrets
 .env
-*.xlsx
-celerybeat-schedule.*
+*.env
+vars.env
 leadsenv
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Django
+db.sqlite3
+celerybeat-schedule.*
+celerybeat.pid
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads / exports
+*.xlsx
+*.csv
+media/

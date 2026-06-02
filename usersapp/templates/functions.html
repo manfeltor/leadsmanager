@@ -24,6 +24,31 @@
     </div>
   </div>
 
+{% if DEMO_MODE and request.user.is_superuser %}
+<div class="w3-container" style="margin-left:300px; margin-bottom: 50px;">
+    <h1 class="w3-xxxlarge"><b>Demo</b></h1>
+    <p>Regenera todos los leads con datos sintéticos. <strong>Esta acción borra todos los leads actuales.</strong></p>
+    <button class="w3-button w3-orange" onclick="document.getElementById('demoModal').style.display='block'">
+        Regenerar datos demo
+    </button>
+</div>
+
+<div id="demoModal" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-top" style="max-width:420px">
+        <div class="w3-center w3-padding-32">
+            <span onclick="document.getElementById('demoModal').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright">&times;</span>
+            <h3>Confirmar regeneración</h3>
+            <p>Se borrarán <strong>todos los leads y su historial</strong> y se generarán datos sintéticos nuevos.<br>Los usuarios no se modifican.</p>
+            <form method="POST" action="{% url 'populate_demo' %}" onsubmit="showProcessingModal()">
+                {% csrf_token %}
+                <button type="submit" class="w3-button w3-orange w3-margin-right">Confirmar</button>
+                <button type="button" class="w3-button w3-grey" onclick="document.getElementById('demoModal').style.display='none'">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <script>
     function checkFileAndSubmitMail() {
         const fileInput = document.getElementById('reclamos_excel_file');

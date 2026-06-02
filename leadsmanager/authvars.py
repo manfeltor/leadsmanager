@@ -15,5 +15,6 @@ DB_PORT = os.environ.get('DB_PORT', config('DB_PORT'))
 SECRET_KEY = os.environ.get('SECRET_KEY', config('SECRET_KEY'))
 APPHOST = os.environ.get('APPHOST', config('APPHOST'))
 PRFTAPIKEY = os.environ.get('PRFTAPIKEY', config('PRFTAPIKEY'))
+DEMO_MODE = os.environ.get('DEMO_MODE', config('DEMO_MODE', default='False')).lower() in ('true', '1', 'yes')
 
 frmids = [7, 3, 4, 5]
